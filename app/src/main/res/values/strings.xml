@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">AutoQuest</string>
+    <string name="questDescription">Опис квесту</string>
+    <string name="timeQuest">Час проведення:</string>
+    <string name="dateQuest">Дата проведення:</string>
+    <string name="registerTxtBtn">реєстрація</string>
+    <string name="title">New quest</string>
+    <string name="your_web_client_id">424797720537-v92r51spim5hfqs6srdcu5h5svbm1147.apps.googleusercontent.com</string>
+    <string name="data_quest">Дата проведення:</string>
+    <string name="time_quest">Час проведення:</string>
+    <string name="rating">/10</string>
+    <string name="take_part">Прийняти участь</string>
+    <string name="consent">Ви дали згоду на участь в квесті</string>
+    <string name="error_txt">Error not found</string>
+    <string name="title_dialog">Підтвердження</string>
+    <string name="messege_dialog">Ви дійсно хочете прийняти участь ?</string>
+    <string name="positive_btn_txt_dialog">Так</string>
+    <string name="negative_btn_txt_dialog">Ні</string>
+    <string name="map_txt_title">Направляйтесь на вказану точку</string>
+    <string name="map_btn_txt">Прокласти маршрут</string>
+    <string name="auto_quest">Auto Quest</string>
+    <string name="only_favorite">тільки обрані</string>
+    <string name="all">усі</string>
+    <string name="time_txt">Час до початку квеста</string>
+    <string name="Enter_code_txt">Введіть код доступу</string>
+    <string name="Good">Підтвердити</string>
+    <string name="signin">SignIn</string>
+    <string name="facebook_sign">facebook sign</string>
 </resources>
