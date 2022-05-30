@@ -14,6 +14,7 @@ import com.example.autoquest.domain.models.QuestItem
 import com.example.autoquest.domain.models.QuestsItemList
 import com.example.autoquest.presentation.view.adapter.ClickOnTheItem
 import com.example.autoquest.presentation.view.adapter.ListOfQuestsAdapter
+import com.example.autoquest.presentation.view.fragment.RegisterFragment
 import com.example.autoquest.presentation.view_model.QuestSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
