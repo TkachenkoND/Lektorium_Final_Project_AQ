@@ -16,14 +16,16 @@ import com.example.autoquest.domain.models.QuestItem
 import com.example.autoquest.domain.models.QuestTask
 import com.example.autoquest.domain.models.QuestsItemList
 import com.example.autoquest.domain.models.QuestsTasksList
-import com.example.autoquest.domain.usecase.LoadQuestsDataUseCase
-import com.example.autoquest.domain.usecase.LoadQuestsTasksUseCase
+import com.example.autoquest.domain.usecase.AddQuestInFavoriteUseCase
+import com.example.autoquest.domain.usecase.FetchQuestItemListUseCase
+import com.example.autoquest.domain.usecase.FetchQuestTaskListUseCase
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class QuestSharedViewModel(
-    private val loadQuestsDataUseCase: LoadQuestsDataUseCase,
-    private val loadQuestsTasksUseCase: LoadQuestsTasksUseCase,
+    private val addQuestInFavoriteUseCase: AddQuestInFavoriteUseCase,
+    private val fetchQuestTaskListUseCase: FetchQuestTaskListUseCase,
+    private val fetchQuestItemListUseCase: FetchQuestItemListUseCase,
     private val workWithSharedPref: WorkWithSharedPref,
     private val questTaskDao: QuestTaskDao,
     private val questItemDao: QuestItemDao,
@@ -74,7 +76,7 @@ class QuestSharedViewModel(
     fun loadQuestsDataVm() {
         viewModelScope.launch {
             try {
-                _listQuests.postValue(loadQuestsDataUseCase.execute())
+                _listQuests.postValue(addQuestInFavoriteUseCase.execute())
                 loadQuestsTasksVm()
                 insertQuestItemInDataBaseVm()
                 insertQuestTaskInDataBaseVm()

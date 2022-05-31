@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "841402547245",
+    "project_id": "autoquest002",
+    "storage_bucket": "autoquest002.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:841402547245:android:be01c0aee710ea96d04ca4",
+        "android_client_info": {
+          "package_name": "com.example.autoquest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "841402547245-72rtaut9okilduplvh8k14omn1uq752i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfxnn5hbKDvWloaJeI6wtI-Z3IV3sQggQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "841402547245-72rtaut9okilduplvh8k14omn1uq752i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

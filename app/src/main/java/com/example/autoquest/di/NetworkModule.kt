@@ -1,7 +1,5 @@
 package com.example.autoquest.di
 
-import com.example.autoquest.data.services.QuestsDataServices
-import com.example.autoquest.data.services.QuestsTasksServices
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory

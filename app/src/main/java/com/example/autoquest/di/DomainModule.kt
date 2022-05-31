@@ -1,10 +1,9 @@
 package com.example.autoquest.di
 
-import com.example.autoquest.domain.usecase.LoadQuestsDataUseCase
-import com.example.autoquest.domain.usecase.LoadQuestsTasksUseCase
+import com.example.autoquest.domain.usecase.AddQuestInFavoriteUseCase
 import org.koin.dsl.module
 
 val domainModule = module {
-    factory { LoadQuestsDataUseCase(get()) }
+    factory { AddQuestInFavoriteUseCase(get()) }
     factory { LoadQuestsTasksUseCase(get()) }
 }
