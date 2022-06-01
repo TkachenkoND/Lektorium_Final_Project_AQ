@@ -4,5 +4,5 @@ import com.example.autoquest.domain.models.QuestsItemList
 import kotlinx.coroutines.flow.Flow
 
 interface FetchQuestItemListRepository {
-    suspend fun fetchQuestItemList(): Flow<QuestsItemList>
+    fun fetchQuestItemList(): Flow<QuestsItemList>
 }

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.autoquest.R
 import com.example.autoquest.databinding.ListOfQuestsFragmentBinding
@@ -16,6 +17,8 @@ import com.example.autoquest.presentation.view.adapter.ClickOnTheItem
 import com.example.autoquest.presentation.view.adapter.ListOfQuestsAdapter
 import com.example.autoquest.presentation.view.fragment.RegisterFragment
 import com.example.autoquest.presentation.view_model.QuestSharedViewModel
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ListOfQuestsFragment : BaseFragment<ListOfQuestsFragmentBinding>(), ClickOnTheItem {
@@ -43,13 +46,10 @@ class ListOfQuestsFragment : BaseFragment<ListOfQuestsFragmentBinding>(), ClickO
     }
 
     private fun initObserveLoadingListOfQuests() {
-        listOfQuestsVm.loadQuestsDataVm()
+        viewLifecycleOwner.lifecycleScope.launch {
+            listOfQuestsVm.questItemList.collect {
 
-        listOfQuestsVm.isLoadingListQuests.observe(viewLifecycleOwner) {
-            if (it) {
-                standardInitUi()
-            } else
-                initObserveLoadingListOfQuestsFromDb()
+            }
         }
     }
 

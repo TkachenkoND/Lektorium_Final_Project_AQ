@@ -22,7 +22,7 @@ class QuestDataSourceImpl(
 
         val questItemList = mutableListOf<QuestItem>()
 
-        questItems.forEach {
+        questItems.documents.forEach {
 
             val questsId = it.getLong("questsId")
             val itemBackgroundImg = it.getString("itemBackgroundImg")

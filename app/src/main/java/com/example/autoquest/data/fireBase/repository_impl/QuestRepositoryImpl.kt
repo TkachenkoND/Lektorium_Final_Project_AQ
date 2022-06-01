@@ -16,7 +16,7 @@ class QuestRepositoryImpl(
         questDataSource.addQuestInFavorite(questId)
     }
 
-    override suspend fun fetchQuestItemList() = questDataSource.fetchQuestItemList()
+    override fun fetchQuestItemList() = questDataSource.fetchQuestItemList()
 
     override suspend fun fetchQuestTaskList() = questDataSource.fetchQuestTaskList()
 

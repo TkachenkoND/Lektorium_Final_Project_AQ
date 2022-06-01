@@ -1,16 +1,12 @@
 package com.example.autoquest.presentation.view_model
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.autoquest.data.database.dao.QuestItemDao
 import com.example.autoquest.data.database.dao.QuestTaskDao
 import com.example.autoquest.data.helper.toQuestItem
-import com.example.autoquest.data.helper.toQuestItemEntity
 import com.example.autoquest.data.helper.toQuestTask
-import com.example.autoquest.data.helper.toQuestTaskEntity
 import com.example.autoquest.data.shared_preferences.WorkWithSharedPref
 import com.example.autoquest.domain.models.QuestItem
 import com.example.autoquest.domain.models.QuestTask
@@ -31,75 +27,12 @@ class QuestSharedViewModel(
     private val questItemDao: QuestItemDao,
 ) : ViewModel() {
 
-    private var _questId = MutableLiveData<Int>()
-    val questId: LiveData<Int> = _questId
-
-    private var _isRegistered = MutableLiveData<Boolean>()
-    val isRegistered: LiveData<Boolean> = _isRegistered
-
-    private val _listQuests = MutableLiveData<QuestsItemList>()
-    val listQuestsItem: LiveData<QuestsItemList> = _listQuests
-
-    private var _isLoadingListQuests = MutableLiveData<Boolean>()
-    val isLoadingListQuests: LiveData<Boolean> = _isLoadingListQuests
-
-    private val _listTasksQuests = MutableLiveData<QuestsTasksList>()
-    val listTasksQuests: LiveData<QuestsTasksList> = _listTasksQuests
-
-    private val _questTask = MutableLiveData<QuestTask>()
-    val questTask: LiveData<QuestTask> = _questTask
-
-    private val _questItem = MutableLiveData<QuestItem>()
-    val questItem: LiveData<QuestItem> = _questItem
-
-    private var _isCorrectCode = MutableLiveData<Boolean>()
-    val isCorrectCode: LiveData<Boolean> = _isCorrectCode
-
-    private var _isLoadingListTasksQuests = MutableLiveData<Boolean>()
-    val isLoadingListTasksQuests: LiveData<Boolean> = _isLoadingListTasksQuests
-
-    private var _isClickedBtnDialog = MutableLiveData<Boolean>()
-    val isClickedBtnDialog: LiveData<Boolean> = _isClickedBtnDialog
-
-    private var _isGetAllQuestTask = MutableLiveData<Boolean>()
-    val isGetAllQuestTask: LiveData<Boolean> = _isGetAllQuestTask
-
-    private var _isGetAllQuestItem = MutableLiveData<Boolean>()
-    val isGetAllQuestItem: LiveData<Boolean> = _isGetAllQuestItem
-
     //Id
     fun setQuestId(questId: Int) {
         _questId.value = questId
     }
 
-    //Api
-    fun loadQuestsDataVm() {
-        viewModelScope.launch {
-            try {
-                _listQuests.postValue(addQuestInFavoriteUseCase.execute())
-                loadQuestsTasksVm()
-                insertQuestItemInDataBaseVm()
-                insertQuestTaskInDataBaseVm()
-
-                _isLoadingListQuests.postValue(true)
-            } catch (e: Exception) {
-                Log.d("LoadException", e.toString())
-                _isLoadingListQuests.postValue(false)
-            }
-        }
-    }
-
-    private suspend fun loadQuestsTasksVm() {
-        viewModelScope.launch {
-            try {
-                _listTasksQuests.postValue(loadQuestsTasksUseCase.execute())
-                _isLoadingListTasksQuests.postValue(true)
-            } catch (e: Exception) {
-                Log.d("LoadException", e.toString())
-                _isLoadingListTasksQuests.postValue(false)
-            }
-        }
-    }
+    val questItemList = fetchQuestItemListUseCase.execute()
 
     //Shared
     fun saveFlagUserIsAuthorizedInShared() {
