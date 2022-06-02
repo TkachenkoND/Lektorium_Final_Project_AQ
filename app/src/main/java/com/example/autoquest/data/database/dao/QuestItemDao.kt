@@ -15,5 +15,5 @@ interface QuestItemDao {
     suspend fun fetchDataQuestItemFromDb(questsId: Int): QuestItemEntity
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateQuestItemInDb(listPublication: List<QuestItemEntity>)
+    fun updateQuestItemInDb(listQuests: List<QuestItemEntity>)
 }

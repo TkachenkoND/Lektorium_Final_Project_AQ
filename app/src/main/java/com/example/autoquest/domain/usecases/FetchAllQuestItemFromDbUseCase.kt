@@ -1,9 +1,9 @@
-package com.example.autoquest.domain.usecase
+package com.example.autoquest.domain.usecases
 
 import com.example.autoquest.domain.repository.database_repository.FetchAllQuestItemFromDbRepository
 
 class FetchAllQuestItemFromDbUseCase(
     private val fetchAllQuestItemFromDbRepository: FetchAllQuestItemFromDbRepository
 ) {
-    fun execute() = fetchAllQuestItemFromDbRepository.fetchAllQuestItemFromDb()
+    suspend fun execute() = fetchAllQuestItemFromDbRepository.fetchAllQuestItemFromDb()
 }

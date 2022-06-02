@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.autoquest.R
 import com.example.autoquest.databinding.ListOfQuestsFragmentBinding
 import com.example.autoquest.domain.models.QuestItem
-import com.example.autoquest.domain.models.QuestsItemList
 import com.example.autoquest.presentation.view.adapter.ClickOnTheItem
 import com.example.autoquest.presentation.view.adapter.ListOfQuestsAdapter
 import com.example.autoquest.presentation.view.fragment.RegisterFragment
@@ -40,44 +38,15 @@ class ListOfQuestsFragment : BaseFragment<ListOfQuestsFragmentBinding>(), ClickO
         super.onViewCreated(view, savedInstanceState)
 
         initRvAdapter()
-        initObserveLoadingListOfQuests()
-        initObserveRegistered()
+        initObserveQuestItemList()
         setClickListener()
     }
 
-    private fun initObserveLoadingListOfQuests() {
+    private fun initObserveQuestItemList() {
         viewLifecycleOwner.lifecycleScope.launch {
             listOfQuestsVm.questItemList.collect {
 
             }
-        }
-    }
-
-    private fun initObserveLoadingListOfQuestsFromDb() {
-        listOfQuestsVm.getAllQuestItemFromDataBaseVm()
-
-        listOfQuestsVm.isGetAllQuestItem.observe(viewLifecycleOwner) {
-            if (it) {
-                standardInitUi()
-            } else {
-                binding.progressBar.visibility = View.GONE
-                Toast.makeText(requireContext(), "Error not found", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun initObserveRegistered() {
-        listOfQuestsVm.fetchFlagUserIsAuthorizedFromShared()
-
-        listOfQuestsVm.isRegistered.observe(viewLifecycleOwner) {
-            if (it) {
-                binding.registerBtn.visibility = View.GONE
-                val param = binding.listOfFragRv.layoutParams as ViewGroup.MarginLayoutParams
-                param.setMargins(0, 0, 0, 0)
-
-                binding.listOfFragRv.layoutParams = param
-            }
-
         }
     }
 
@@ -104,15 +73,6 @@ class ListOfQuestsFragment : BaseFragment<ListOfQuestsFragmentBinding>(), ClickO
         }
     }
 
-    private fun standardInitUi() {
-        listOfQuests = listOfQuestsVm.listQuestsItem.value!!.questList
-        listOfQuestsAdapter.submitList(listOfQuests)
-        newFavoriteList = filterOnlyFavorites(listOfQuestsVm.listQuestsItem.value)
-
-        binding.progressBar.visibility = View.GONE
-        binding.listFragmentLayout.visibility = View.VISIBLE
-    }
-
     private fun goToNextFragment(fragment: Fragment) {
         parentFragmentManager.commit {
             replace(R.id.containerFragment, fragment)
@@ -122,12 +82,6 @@ class ListOfQuestsFragment : BaseFragment<ListOfQuestsFragmentBinding>(), ClickO
     override fun itemPress(questItem: QuestItem) {
         listOfQuestsVm.setQuestId(questItem.questsId)
         goToNextFragment(DetailsQuestItemFragment())
-    }
-
-    private fun filterOnlyFavorites(listOfQuestsItem: QuestsItemList?): List<QuestItem> {
-        val newFavoriteList = mutableListOf<QuestItem>()
-        //
-        return newFavoriteList
     }
 
 }
