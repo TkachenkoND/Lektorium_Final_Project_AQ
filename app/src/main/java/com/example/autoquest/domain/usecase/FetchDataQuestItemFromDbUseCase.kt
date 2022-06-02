@@ -1,6 +1,6 @@
 package com.example.autoquest.domain.usecase
 
-import com.example.autoquest.domain.repository.FetchDataQuestItemFromDbRepository
+import com.example.autoquest.domain.repository.database_repository.FetchDataQuestItemFromDbRepository
 
 class FetchDataQuestItemFromDbUseCase(
     private val fetchDataQuestItemFromDbRepository: FetchDataQuestItemFromDbRepository

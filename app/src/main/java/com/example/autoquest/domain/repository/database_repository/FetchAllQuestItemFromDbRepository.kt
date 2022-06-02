@@ -1,4 +1,4 @@
-package com.example.autoquest.domain.repository
+package com.example.autoquest.domain.repository.database_repository
 
 interface FetchAllQuestItemFromDbRepository {
     fun fetchAllQuestItemFromDb(): Any
