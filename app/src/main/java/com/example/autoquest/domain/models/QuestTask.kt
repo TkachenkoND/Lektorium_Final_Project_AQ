@@ -6,6 +6,7 @@ data class QuestTask(
     val answerTask: String,
     val accessCode: String,
     val latitude: Double,
-    val longitude: Double
+    val longitude: Double,
+    val questTaskImg: String
 )
 

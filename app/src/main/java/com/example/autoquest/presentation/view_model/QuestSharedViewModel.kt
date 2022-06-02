@@ -1,57 +1,50 @@
 package com.example.autoquest.presentation.view_model
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.autoquest.data.database.dao.QuestItemDao
 import com.example.autoquest.data.database.dao.QuestTaskDao
 import com.example.autoquest.data.helper.toQuestItem
-import com.example.autoquest.data.helper.toQuestTask
+import com.example.autoquest.data.helper.toQuestTaskEntity
 import com.example.autoquest.data.shared_preferences.WorkWithSharedPref
 import com.example.autoquest.domain.models.QuestItem
-import com.example.autoquest.domain.models.QuestTask
 import com.example.autoquest.domain.models.QuestsItemList
-import com.example.autoquest.domain.models.QuestsTasksList
-import com.example.autoquest.domain.usecase.AddQuestInFavoriteUseCase
-import com.example.autoquest.domain.usecase.FetchQuestItemListUseCase
-import com.example.autoquest.domain.usecase.FetchQuestTaskListUseCase
+import com.example.autoquest.domain.usecase.UpdateQuestIsFavoriteInFbUseCase
+import com.example.autoquest.domain.usecase.FetchQuestItemListFromFbUseCase
+import com.example.autoquest.domain.usecase.FetchQuestTaskListFromFbUseCase
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class QuestSharedViewModel(
-    private val addQuestInFavoriteUseCase: AddQuestInFavoriteUseCase,
-    private val fetchQuestTaskListUseCase: FetchQuestTaskListUseCase,
-    private val fetchQuestItemListUseCase: FetchQuestItemListUseCase,
+    private val updateQuestIsFavoriteInFbUseCase: UpdateQuestIsFavoriteInFbUseCase,
+    private val fetchQuestTaskListFromFbUseCase: FetchQuestTaskListFromFbUseCase,
+    private val fetchQuestItemListFromFbUseCase: FetchQuestItemListFromFbUseCase,
     private val workWithSharedPref: WorkWithSharedPref,
     private val questTaskDao: QuestTaskDao,
     private val questItemDao: QuestItemDao,
 ) : ViewModel() {
 
-    //Id
+    private val _isRegistered = MutableLiveData<Boolean>()
+    val isRegistered: LiveData<Boolean> = _isRegistered
+
+    private val _questId = MutableLiveData<Int>()
+    val questId: LiveData<Int> = _questId
+
+    private val _isClickedBtnDialog = MutableLiveData<Boolean>()
+    val isClickedBtnDialog: LiveData<Boolean> = _isClickedBtnDialog
+
     fun setQuestId(questId: Int) {
         _questId.value = questId
     }
 
-    val questItemList = fetchQuestItemListUseCase.execute()
+    val questItemList = fetchQuestItemListFromFbUseCase.execute()
+    var questTaskList = fetchQuestTaskListFromFbUseCase.execute()
 
-    //Shared
-    fun saveFlagUserIsAuthorizedInShared() {
-        workWithSharedPref.saveFlagUserIsAuthorizedInShared()
-    }
-
-    fun fetchFlagUserIsAuthorizedFromShared() {
-        if (workWithSharedPref.fetchFlagUserIsAuthorizedFromShared())
-            _isRegistered.postValue(true)
-        else
-            _isRegistered.postValue(false)
-    }
-
-    fun saveQuestIdInShared(questId: Int) {
-        workWithSharedPref.saveQuestIdInShared(questId)
-    }
-
-    fun fetchQuestIdFromShared() {
-        workWithSharedPref.fetchQuestIdFromShared()
+    fun addQuestInFavorite(questId: Int) {
+        updateQuestIsFavoriteInFbUseCase.execute(questId)
     }
 
     //Click Btn
@@ -63,11 +56,13 @@ class QuestSharedViewModel(
     }
 
     //DataBase
-    private suspend fun insertQuestTaskInDataBaseVm() {
+    private fun insertQuestTaskInDataBaseVm() {
         viewModelScope.launch {
             try {
-                _listTasksQuests.value!!.questTaskList.forEach {
-                    questTaskDao.insertQuestTaskInDataBase(it.toQuestTaskEntity())
+                questTaskList.collect { taskList ->
+                    taskList.questTaskList.forEach {
+                        questTaskDao.insertQuestTaskInDataBase(it.toQuestTaskEntity())
+                    }
                 }
             } catch (e: Exception) {
                 Log.d("InsertException", e.toString())
@@ -75,28 +70,10 @@ class QuestSharedViewModel(
         }
     }
 
-    fun getAllQuestTaskFromDataBaseVm() {
-        viewModelScope.launch {
-            try {
-                val data = questTaskDao.getAllQuestTaskFromDataBase()
-                val listToQuestTask = mutableListOf<QuestTask>()
-
-                data.forEach {
-                    listToQuestTask.add(it.toQuestTask())
-                }
-
-                _listTasksQuests.postValue(QuestsTasksList(listToQuestTask))
-                _isGetAllQuestTask.postValue(true)
-            } catch (e: Exception) {
-                Log.d("GetAllException", e.toString())
-            }
-        }
-    }
-
     fun getQuestTaskFromDataBaseVm(questsId: Int) {
         viewModelScope.launch {
             try {
-                _questTask.postValue(questTaskDao.getDataQuestTask(questsId).toQuestTask())
+                questTaskList = questTaskDao.getDataQuestTask(questsId)
             } catch (e: Exception) {
                 Log.d("GetTaskException", e.toString())
             }
@@ -106,18 +83,18 @@ class QuestSharedViewModel(
     fun getQuestItemFromDataBaseVm(questsId: Int) {
         viewModelScope.launch {
             try {
-                _questItem.postValue(questItemDao.getDataQuestItem(questsId).toQuestItem())
+                questItemList = questItemDao.fetchDataQuestItemFromDb(questsId)
             } catch (e: Exception) {
                 Log.d("GetItemException", e.toString())
             }
         }
     }
 
-    private suspend fun insertQuestItemInDataBaseVm() {
+    private fun insertQuestItemInDataBaseVm() {
         viewModelScope.launch {
             try {
                 _listQuests.value!!.questList.forEach {
-                    questItemDao.insertQuestItemInDataBase(it.toQuestItemEntity())
+                    questItemDao.insertQuestItemInDb(it.toQuestItemEntity())
                 }
             } catch (e: Exception) {
                 Log.d("InsertException", e.toString())
@@ -128,7 +105,7 @@ class QuestSharedViewModel(
     fun getAllQuestItemFromDataBaseVm() {
         viewModelScope.launch {
             try {
-                val data = questItemDao.getAllQuestItemFromDataBase()
+                val data = questItemDao.fetchAllQuestItemFromDb()
                 val listToQuestItem = mutableListOf<QuestItem>()
 
                 data.forEach {

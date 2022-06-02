@@ -1,12 +1,12 @@
 package com.example.autoquest.di
 
-import com.example.autoquest.domain.usecase.AddQuestInFavoriteUseCase
-import com.example.autoquest.domain.usecase.FetchQuestItemListUseCase
-import com.example.autoquest.domain.usecase.FetchQuestTaskListUseCase
+import com.example.autoquest.domain.usecase.UpdateQuestIsFavoriteInFbUseCase
+import com.example.autoquest.domain.usecase.FetchQuestItemListFromFbUseCase
+import com.example.autoquest.domain.usecase.FetchQuestTaskListFromFbUseCase
 import org.koin.dsl.module
 
 val domainModule = module {
-    factory { AddQuestInFavoriteUseCase(get()) }
-    factory { FetchQuestItemListUseCase(get()) }
-    factory { FetchQuestTaskListUseCase(get()) }
+    factory { UpdateQuestIsFavoriteInFbUseCase(get()) }
+    factory { FetchQuestItemListFromFbUseCase(get()) }
+    factory { FetchQuestTaskListFromFbUseCase(get()) }
 }

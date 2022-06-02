@@ -11,7 +11,8 @@ fun QuestTask.toQuestTaskEntity() = QuestTaskEntity(
     answerTask = answerTask,
     accessCode = accessCode,
     latitude = latitude,
-    longitude = longitude
+    longitude = longitude,
+    questTaskImg = questTaskImg
 )
 
 fun QuestTaskEntity.toQuestTask() = QuestTask(
@@ -20,7 +21,8 @@ fun QuestTaskEntity.toQuestTask() = QuestTask(
     answerTask = answerTask,
     accessCode = accessCode,
     latitude = latitude,
-    longitude = longitude
+    longitude = longitude,
+    questTaskImg = questTaskImg
 )
 
 fun QuestItem.toQuestItemEntity() = QuestItemEntity(
@@ -32,7 +34,8 @@ fun QuestItem.toQuestItemEntity() = QuestItemEntity(
     nameQuest = nameQuest,
     timeQuest = timeQuest,
     placeStartQuest = placeStartQuest,
-    imgDetailsQuest = imgDetailsQuest
+    imgDetailsQuest = imgDetailsQuest,
+    isFavorite = isFavorite
 )
 
 fun QuestItemEntity.toQuestItem() = QuestItem(
@@ -44,5 +47,6 @@ fun QuestItemEntity.toQuestItem() = QuestItem(
     nameQuest = nameQuest,
     timeQuest = timeQuest,
     placeStartQuest = placeStartQuest,
-    imgDetailsQuest = imgDetailsQuest
+    imgDetailsQuest = imgDetailsQuest,
+    isFavorite = isFavorite
 )

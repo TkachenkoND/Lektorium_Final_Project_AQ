@@ -17,8 +17,8 @@ import com.example.autoquest.presentation.view.adapter.ClickOnTheItem
 import com.example.autoquest.presentation.view.adapter.ListOfQuestsAdapter
 import com.example.autoquest.presentation.view.fragment.RegisterFragment
 import com.example.autoquest.presentation.view_model.QuestSharedViewModel
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.launch
+
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ListOfQuestsFragment : BaseFragment<ListOfQuestsFragmentBinding>(), ClickOnTheItem {

@@ -10,5 +10,5 @@ data class QuestItem(
     val nameQuest: String,
     val timeQuest: String,
     val placeStartQuest: String,
-    val imgDetailsQuest: String,
+    val imgDetailsQuest: String
 )

@@ -23,5 +23,9 @@ data class QuestTaskEntity(
     val latitude: Double,
 
     @ColumnInfo(name = "longitude")
-    val longitude: Double
+    val longitude: Double,
+
+    @ColumnInfo(name = "quest_task_img")
+    val questTaskImg: String
+
 )
