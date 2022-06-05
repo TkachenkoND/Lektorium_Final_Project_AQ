@@ -1,15 +1,32 @@
 package com.example.autoquest.di
 
-import com.example.autoquest.data.shared_preferences.WorkWithSharedPref
-import com.example.autoquest.domain.repository.fireBase_repository.UpdateQuestIsFavoriteInFbRepository
+import com.example.autoquest.data.database.repository_impl.FetchAllQuestItemFromDbRepositoryImpl
+import com.example.autoquest.data.database.repository_impl.FetchDataQuestItemFromDbRepositoryImpl
+import com.example.autoquest.data.database.repository_impl.InsertQuestItemInDbRepositoryImpl
+import com.example.autoquest.data.database.repository_impl.UpdateQuestItemInDbRepositoryImpl
+import com.example.autoquest.data.fireBase.repository_impl.FetchFavoriteQuestItemFromFbRepositoryImpl
+import com.example.autoquest.data.fireBase.repository_impl.FetchQuestItemListFromFbRepositoryImpl
+import com.example.autoquest.data.fireBase.repository_impl.FetchQuestTaskListFromFbRepositoryImpl
+import com.example.autoquest.data.fireBase.repository_impl.UpdateQuestIsFavoriteInFbRepositoryImpl
+import com.example.autoquest.domain.repository.database_repository.FetchAllQuestItemFromDbRepository
+import com.example.autoquest.domain.repository.database_repository.FetchDataQuestItemFromDbRepository
+import com.example.autoquest.domain.repository.database_repository.InsertQuestItemInDbRepository
+import com.example.autoquest.domain.repository.database_repository.UpdateQuestItemInDbRepository
+import com.example.autoquest.domain.repository.fireBase_repository.FetchFavoriteQuestItemFromFbRepository
 import com.example.autoquest.domain.repository.fireBase_repository.FetchQuestItemListFromFbRepository
 import com.example.autoquest.domain.repository.fireBase_repository.FetchQuestTaskListFromFbRepository
+import com.example.autoquest.domain.repository.fireBase_repository.UpdateQuestIsFavoriteInFbRepository
 import org.koin.dsl.module
 
 val dataModule = module {
-    single<FetchQuestItemListFromFbRepository> { QuestInFbFromFbFromFbRepositoryImpl(get()) }
-    single<FetchQuestTaskListFromFbRepository> { QuestInFbFromFbFromFbRepositoryImpl(get()) }
-    single<UpdateQuestIsFavoriteInFbRepository> { QuestInFbFromFbFromFbRepositoryImpl(get()) }
+    single<FetchAllQuestItemFromDbRepository> { FetchAllQuestItemFromDbRepositoryImpl(get()) }
+    single<FetchDataQuestItemFromDbRepository> { FetchDataQuestItemFromDbRepositoryImpl(get()) }
+    single<InsertQuestItemInDbRepository> { InsertQuestItemInDbRepositoryImpl(get()) }
+    single<UpdateQuestItemInDbRepository> { UpdateQuestItemInDbRepositoryImpl(get()) }
 
-    single { WorkWithSharedPref(get()) }
+    single<FetchFavoriteQuestItemFromFbRepository> { FetchFavoriteQuestItemFromFbRepositoryImpl(get()) }
+    single<FetchQuestTaskListFromFbRepository> { FetchQuestTaskListFromFbRepositoryImpl(get()) }
+    single<FetchQuestItemListFromFbRepository> { FetchQuestItemListFromFbRepositoryImpl(get()) }
+    single<UpdateQuestIsFavoriteInFbRepository> { UpdateQuestIsFavoriteInFbRepositoryImpl(get()) }
+
 }

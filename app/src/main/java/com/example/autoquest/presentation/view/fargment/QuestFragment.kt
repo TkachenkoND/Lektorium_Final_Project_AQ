@@ -41,41 +41,7 @@ class QuestFragment : BaseFragment<QuestFragmentBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initObserveQuestIdAndLoadQuestTask()
-        initObserveQuestTask()
-        initObserveQuestItem()
-        clickBtnCheck()
 
-    }
-
-    private fun initObserveQuestIdAndLoadQuestTask() {
-        sharedVm.questId.observe(viewLifecycleOwner) {
-            if (it != null) {
-                sharedVm.getQuestItemFromDataBaseVm(it)
-                //sharedVm.getQuestTaskFromDataBaseVm(it)
-            } else
-                Toast.makeText(requireContext(), "error id", Toast.LENGTH_SHORT)
-                    .show()
-        }
-    }
-
-    private fun initObserveQuestTask() {
-        sharedVm.isCorrectCode.observe(viewLifecycleOwner) {
-            if (it)
-                goToNextFragment(LocationFragment())
-            else
-                showToast("Неправельний код доступу(")
-        }
-    }
-
-    private fun initObserveQuestItem() {
-        sharedVm.questItem.observe(viewLifecycleOwner) {
-            if (it != null) {
-                startInitUi(it.timeQuest, it.dataQuest)
-            } else
-                Toast.makeText(requireContext(), "error questItem", Toast.LENGTH_SHORT)
-                    .show()
-        }
     }
 
     private fun startInitUi(time: String, data: String) {
@@ -122,15 +88,6 @@ class QuestFragment : BaseFragment<QuestFragmentBinding>() {
             }
         }.start()
 
-    }
-
-    private fun clickBtnCheck() {
-        binding.btnConfirm.setOnClickListener {
-            sharedVm.checkAccessCode(
-                binding.questCodeEdit.text.toString(),
-                sharedVm.listTasksQuests.value!!.questTaskList[sharedVm.questId.value!!].accessCode
-            )
-        }
     }
 
     private fun showToast(str: String) {

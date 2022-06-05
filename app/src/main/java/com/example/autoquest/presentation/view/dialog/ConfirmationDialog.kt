@@ -17,7 +17,6 @@ class ConfirmationDialog : DialogFragment() {
             .setTitle(getString(R.string.title_dialog))
             .setMessage(getString(R.string.messege_dialog))
             .setPositiveButton(getString(R.string.positive_btn_txt_dialog)) { _, _ ->
-                sharedVm.clickBtnDialog(true)
             }
             .setNegativeButton(getString(R.string.negative_btn_txt_dialog)) { _, _ ->
             }

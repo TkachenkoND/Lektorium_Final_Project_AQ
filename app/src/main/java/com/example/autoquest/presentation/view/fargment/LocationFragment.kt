@@ -41,8 +41,6 @@ class LocationFragment : BaseFragment<LocationFragmentBinding>(), OnMapReadyCall
 
         locationManager = requireContext().getSystemService(LOCATION_SERVICE) as LocationManager
 
-        initObserveQuestTaskData()
-
         val mapFragment = childFragmentManager.findFragmentById(
             R.id.map_fragment
         ) as SupportMapFragment
@@ -58,18 +56,6 @@ class LocationFragment : BaseFragment<LocationFragmentBinding>(), OnMapReadyCall
             )
         } catch (ex: SecurityException) {
             Log.d("myTag", ex.toString())
-        }
-    }
-
-    private fun initObserveQuestTaskData() {
-        sharedVm.questId.observe(viewLifecycleOwner) {
-            if (it != null) {
-                latitude = sharedVm.listTasksQuests.value!!.questTaskList[it].latitude
-                longitude = sharedVm.listTasksQuests.value!!.questTaskList[it].longitude
-            } else {
-                latitude = 50.450238
-                longitude = 30.523348
-            }
         }
     }
 

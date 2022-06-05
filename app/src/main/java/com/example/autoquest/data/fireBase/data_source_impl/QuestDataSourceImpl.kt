@@ -59,8 +59,12 @@ class QuestDataSourceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun addQuestInFavorite(questId: Int) {
+    override fun fetchFavoriteQuestItem(): Flow<QuestsItemList> {
+        TODO("Not yet implemented")
+    }
 
+    override fun updateQuestIsFavorite(questId: Int) {
+        TODO("Not yet implemented")
     }
 
 }

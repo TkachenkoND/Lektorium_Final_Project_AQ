@@ -7,7 +7,7 @@ import com.example.autoquest.domain.repository.database_repository.UpdateQuestIt
 class UpdateQuestItemInDbRepositoryImpl(
     private val questItemDao: QuestItemDao
 ) : UpdateQuestItemInDbRepository {
-    override fun updateQuestItemInDb(listQuests: List<QuestItemEntity>) {
-        questItemDao.updateQuestItemInDb(listQuests)
+    override fun updateQuestItemInDb(questItem: QuestItemEntity) {
+        questItemDao.updateQuestItemInDb(questItem)
     }
 }

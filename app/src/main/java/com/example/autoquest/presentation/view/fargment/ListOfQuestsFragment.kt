@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +14,6 @@ import com.example.autoquest.databinding.ListOfQuestsFragmentBinding
 import com.example.autoquest.domain.models.QuestItem
 import com.example.autoquest.presentation.view.adapter.ClickOnTheItem
 import com.example.autoquest.presentation.view.adapter.ListOfQuestsAdapter
-import com.example.autoquest.presentation.view.fragment.RegisterFragment
 import com.example.autoquest.presentation.view_model.QuestSharedViewModel
 import kotlinx.coroutines.launch
 
@@ -45,7 +45,9 @@ class ListOfQuestsFragment : BaseFragment<ListOfQuestsFragmentBinding>(), ClickO
     private fun initObserveQuestItemList() {
         viewLifecycleOwner.lifecycleScope.launch {
             listOfQuestsVm.questItemList.collect {
-
+                listOfQuestsAdapter.submitList(it.questList)
+                binding.progressBar.visibility = View.GONE
+                binding.listFragmentLayout.visibility = View.VISIBLE
             }
         }
     }

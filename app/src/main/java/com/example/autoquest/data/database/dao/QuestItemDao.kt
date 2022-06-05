@@ -1,7 +1,9 @@
 package com.example.autoquest.data.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.autoquest.data.database.entity.QuestItemEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface QuestItemDao {
@@ -15,5 +17,5 @@ interface QuestItemDao {
     suspend fun fetchDataQuestItemFromDb(questsId: Int): QuestItemEntity
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateQuestItemInDb(listQuests: List<QuestItemEntity>)
+    fun updateQuestItemInDb(questItem: QuestItemEntity)
 }

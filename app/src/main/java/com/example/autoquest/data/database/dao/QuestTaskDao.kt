@@ -21,8 +21,8 @@ interface QuestTaskDao {
     suspend fun insertQuestItemInDataBase(questsItems: QuestItemEntity)
 
     @Query("SELECT * from quest_task WHERE quests_id = :questsId")
-    suspend fun getDataQuestTask(questsId: Int): Flow<QuestTask>
+    suspend fun getDataQuestTask(questsId: Int): QuestTaskEntity
 
     @Query("SELECT * from quest_item WHERE quests_id = :questsId")
-    suspend fun getDataQuestItem(questsId: Int): Flow<QuestItem>
+    suspend fun getDataQuestItem(questsId: Int): QuestItemEntity
 }

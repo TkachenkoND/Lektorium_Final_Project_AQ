@@ -1,4 +1,4 @@
-package com.example.autoquest.presentation.view.fragment
+package com.example.autoquest.presentation.view.fargment
 
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -12,10 +12,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.example.autoquest.R
-import com.example.autoquest.databinding.DetailsQuestItemFragmentBinding
 import com.example.autoquest.databinding.RegisterFragmentBinding
-import com.example.autoquest.presentation.view.fargment.BaseFragment
-import com.example.autoquest.presentation.view.fargment.ListOfQuestsFragment
 import com.example.autoquest.presentation.view_model.QuestSharedViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -98,7 +95,6 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding>() {
         if (user != null) {
             Toast.makeText(requireContext(), "Hello ${user.displayName} !", Toast.LENGTH_SHORT)
                 .show()
-            sharedVm.saveFlagUserIsAuthorizedInShared()
             goToNextFragment(ListOfQuestsFragment())
         }
     }
