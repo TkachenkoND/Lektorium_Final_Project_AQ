@@ -4,29 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import com.example.autoquest.R
+import androidx.lifecycle.lifecycleScope
 import com.example.autoquest.databinding.DetailsQuestItemFragmentBinding
 import com.example.autoquest.presentation.view_model.QuestSharedViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class DetailsQuestItemFragment : BaseFragment<DetailsQuestItemFragmentBinding>() {
+class DetailsQuestItemFragment : BaseFragment<DetailsQuestItemFragmentBinding>(ListOfQuestsFragment()) {
 
     private val sharedVm by sharedViewModel<QuestSharedViewModel>()
-
-    private var questId: Int? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                goToNextFragment(ListOfQuestsFragment())
-            }
-        })
-    }
 
     override fun initBinding(
         inflater: LayoutInflater,
@@ -36,13 +22,17 @@ class DetailsQuestItemFragment : BaseFragment<DetailsQuestItemFragmentBinding>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initObserveQuestId()
     }
 
-    private fun goToNextFragment(fragment: Fragment) {
-        parentFragmentManager.commit {
-            replace(R.id.containerFragment, fragment)
+    private fun initObserveQuestId() {
+        lifecycleScope.launch {
+            sharedVm.questItemList.collect {
+
+            }
         }
     }
+
 
 
 }

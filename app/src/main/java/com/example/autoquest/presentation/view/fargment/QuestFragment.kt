@@ -7,19 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
-import com.example.autoquest.R
 import com.example.autoquest.databinding.QuestFragmentBinding
 import com.example.autoquest.presentation.view.fargment.BaseFragment
+import com.example.autoquest.presentation.view.fargment.DetailsQuestItemFragment
 import com.example.autoquest.presentation.view.fargment.ListOfQuestsFragment
-import com.example.autoquest.presentation.view.fargment.LocationFragment
 import com.example.autoquest.presentation.view_model.QuestSharedViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-class QuestFragment : BaseFragment<QuestFragmentBinding>() {
+class QuestFragment : BaseFragment<QuestFragmentBinding>(DetailsQuestItemFragment()) {
 
     private val sharedVm by sharedViewModel<QuestSharedViewModel>()
 
@@ -92,12 +89,6 @@ class QuestFragment : BaseFragment<QuestFragmentBinding>() {
 
     private fun showToast(str: String) {
         Toast.makeText(requireContext(), str, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun goToNextFragment(fragment: Fragment) {
-        parentFragmentManager.commit {
-            replace(R.id.containerFragment, fragment)
-        }
     }
 
 }

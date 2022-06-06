@@ -6,8 +6,8 @@ import com.example.autoquest.domain.repository.fireBase_repository.UpdateQuestIs
 class UpdateQuestIsFavoriteInFbRepositoryImpl(
     private val questDataSource: QuestDataSource
 ) : UpdateQuestIsFavoriteInFbRepository {
-    override fun updateQuestIsFavoriteInFb(questId: Int) {
-        questDataSource.updateQuestIsFavorite(questId)
+    override fun updateQuestIsFavoriteInFb(isFavorite:Boolean) {
+        questDataSource.updateQuestIsFavorite(isFavorite)
     }
 
 }

@@ -16,8 +16,9 @@ class QuestDataSourceImpl(
 ) : QuestDataSource {
 
     override fun fetchQuestItemList() = flow {
+
         val questItems = Tasks.await(
-            db.collection("quests").get()
+            db.collection("questItemList").get()
         )
 
         val questItemList = mutableListOf<QuestItem>()
@@ -26,7 +27,7 @@ class QuestDataSourceImpl(
 
             val questsId = it.getLong("questsId")
             val itemBackgroundImg = it.getString("itemBackgroundImg")
-            val rating = it.getLong("rating")
+            val rating = it.getString("rating")
             val isFavorite = it.getBoolean("isFavorite")
             val questDescription = it.getString("questDescription")
             val dataQuest = it.getString("dataQuest")
@@ -50,21 +51,62 @@ class QuestDataSourceImpl(
                 )
             )
         }
+            val data = QuestsItemList(questItemList = questItemList)
+            emit(data)
 
-        val data = QuestsItemList(questList = questItemList)
-        emit(data)
     }.flowOn(Dispatchers.IO)
 
     override fun fetchQuestTaskList(): Flow<QuestsTasksList> {
         TODO("Not yet implemented")
     }
 
-    override fun fetchFavoriteQuestItem(): Flow<QuestsItemList> {
-        TODO("Not yet implemented")
-    }
+    override fun fetchFavoriteQuestItem()= flow {
 
-    override fun updateQuestIsFavorite(questId: Int) {
-        TODO("Not yet implemented")
+        val questItems = Tasks.await(
+            db.collection("questItemList").whereEqualTo("isFavorite",true).get()
+        )
+
+        val questItemList = mutableListOf<QuestItem>()
+
+        questItems.documents.forEach {
+
+            val questsId = it.getLong("questsId")
+            val itemBackgroundImg = it.getString("itemBackgroundImg")
+            val rating = it.getString("rating")
+            val isFavorite = it.getBoolean("isFavorite")
+            val questDescription = it.getString("questDescription")
+            val dataQuest = it.getString("dataQuest")
+            val nameQuest = it.getString("nameQuest")
+            val timeQuest = it.getString("timeQuest")
+            val placeStartQuest = it.getString("placeStartQuest")
+            val imgDetailsQuest = it.getString("imgDetailsQuest")
+
+            questItemList.add(
+                QuestItem(
+                    questsId!!.toInt(),
+                    itemBackgroundImg!!,
+                    rating!!.toInt(),
+                    isFavorite!!,
+                    questDescription!!,
+                    dataQuest!!,
+                    nameQuest!!,
+                    timeQuest!!,
+                    placeStartQuest!!,
+                    imgDetailsQuest!!
+                )
+            )
+        }
+        val data = QuestsItemList(questItemList = questItemList)
+        emit(data)
+
+    }.flowOn(Dispatchers.IO)
+
+    override fun updateQuestIsFavorite(isFavorite: Boolean) {
+        val routeDocRef = db.collection("questItemList").document("questItem0")
+
+        db.runBatch { batch ->
+            batch.update(routeDocRef, "isFavorite", isFavorite)
+        }
     }
 
 }

@@ -9,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import com.example.autoquest.R
 import com.example.autoquest.databinding.RegisterFragmentBinding
 import com.example.autoquest.presentation.view_model.QuestSharedViewModel
@@ -25,7 +23,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class RegisterFragment : BaseFragment<RegisterFragmentBinding>() {
+class RegisterFragment : BaseFragment<RegisterFragmentBinding>(ListOfQuestsFragment()) {
 
     private val sharedVm by sharedViewModel<QuestSharedViewModel>()
 
@@ -112,12 +110,6 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding>() {
                     updateUI(null)
                 }
             }
-    }
-
-    private fun goToNextFragment(fragment: Fragment) {
-        parentFragmentManager.commit {
-            replace(R.id.containerFragment, fragment)
-        }
     }
 
 }

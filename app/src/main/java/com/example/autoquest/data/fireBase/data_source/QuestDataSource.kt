@@ -9,6 +9,6 @@ interface QuestDataSource {
     fun fetchQuestItemList(): Flow<QuestsItemList>
     fun fetchQuestTaskList(): Flow<QuestsTasksList>
     fun fetchFavoriteQuestItem(): Flow<QuestsItemList>
-    fun updateQuestIsFavorite(questId: Int)
+    fun updateQuestIsFavorite(isFavorite: Boolean)
 
 }

@@ -14,7 +14,14 @@ interface ClickOnTheItem {
     fun itemPress(questItem: QuestItem)
 }
 
-class ListOfQuestsAdapter(val clickOnTheItem: ClickOnTheItem) :
+interface ClickOnTheFavorite {
+    fun favoritePress(isFavorite: Boolean)
+}
+
+class ListOfQuestsAdapter(
+    val clickOnTheItem: ClickOnTheItem,
+    val clickOnTheFavorite: ClickOnTheFavorite
+) :
     ListAdapter<QuestItem, ListOfQuestsAdapter.ItemViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -37,6 +44,12 @@ class ListOfQuestsAdapter(val clickOnTheItem: ClickOnTheItem) :
                 dataQuest.text = questItem.dataQuest
                 nameQuest.text = questItem.nameQuest
 
+                if (questItem.isFavorite)
+                    favorites.setBackgroundResource(R.drawable.quest_item_star_background_img)
+                else
+                    favorites.setBackgroundResource(R.drawable.quest_item_star_img)
+
+
                 Glide.with(itemBackgroundImg.context)
                     .load(questItem.itemBackgroundImg)
                     .error(R.color.white)
@@ -47,7 +60,14 @@ class ListOfQuestsAdapter(val clickOnTheItem: ClickOnTheItem) :
                 }
 
                 favorites.setOnClickListener {
-                    favorites.setBackgroundResource(R.drawable.quest_item_star_background_img)
+
+                    if (questItem.isFavorite) {
+                        favorites.setBackgroundResource(R.drawable.quest_item_star_img)
+                        clickOnTheFavorite.favoritePress(false)
+                    } else {
+                        favorites.setBackgroundResource(R.drawable.quest_item_star_background_img)
+                        clickOnTheFavorite.favoritePress(true)
+                    }
                 }
             }
         }

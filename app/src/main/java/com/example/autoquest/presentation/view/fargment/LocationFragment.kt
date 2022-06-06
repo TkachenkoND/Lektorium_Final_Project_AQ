@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.autoquest.R
 import com.example.autoquest.databinding.LocationFragmentBinding
+import com.example.autoquest.presentation.view.fragment.QuestFragment
 import com.example.autoquest.presentation.view_model.QuestSharedViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -21,7 +22,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class LocationFragment : BaseFragment<LocationFragmentBinding>(), OnMapReadyCallback {
+class LocationFragment : BaseFragment<LocationFragmentBinding>(QuestFragment()),
+    OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
 
