@@ -12,4 +12,5 @@ val domainModule = module {
     factory { InsertQuestItemInDbUseCase(get()) }
     factory { UpdateQuestIsFavoriteInFbUseCase(get()) }
     factory { UpdateQuestItemInDbUseCase(get()) }
+    factory { LocateUseCase(get()) }
 }
