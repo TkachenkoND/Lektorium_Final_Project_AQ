@@ -35,6 +35,9 @@ data class QuestItemEntity(
     val imgDetailsQuest: String,
 
     @ColumnInfo(name = "is_favorite_quest")
-    val isFavorite: Boolean
+    val isFavorite: Boolean,
+
+    @ColumnInfo(name = "access_code")
+    val accessCode: String,
 
 )

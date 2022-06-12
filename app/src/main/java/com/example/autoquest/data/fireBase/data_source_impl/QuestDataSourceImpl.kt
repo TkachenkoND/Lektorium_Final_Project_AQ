@@ -35,6 +35,7 @@ class QuestDataSourceImpl(
             val timeQuest = it.getString("timeQuest")
             val placeStartQuest = it.getString("placeStartQuest")
             val imgDetailsQuest = it.getString("imgDetailsQuest")
+            val accessCode = it.getString("accessCode")
 
             questItemList.add(
                 QuestItem(
@@ -47,7 +48,8 @@ class QuestDataSourceImpl(
                     nameQuest!!,
                     timeQuest!!,
                     placeStartQuest!!,
-                    imgDetailsQuest!!
+                    imgDetailsQuest!!,
+                    accessCode!!
                 )
             )
         }
@@ -79,7 +81,6 @@ class QuestDataSourceImpl(
                     questsId = questsId!!.toInt(),
                     textTask = textTask!!,
                     answerTask = answerTask!!,
-                    accessCode = accessCode!!,
                     latitude = latitude!!,
                     longitude = longitude!!,
                     questTaskImg = questTaskImg!!
@@ -111,6 +112,7 @@ class QuestDataSourceImpl(
             val timeQuest = it.getString("timeQuest")
             val placeStartQuest = it.getString("placeStartQuest")
             val imgDetailsQuest = it.getString("imgDetailsQuest")
+            val accessCode = it.getString("accessCode")
 
             questItemList.add(
                 QuestItem(
@@ -123,7 +125,8 @@ class QuestDataSourceImpl(
                     nameQuest!!,
                     timeQuest!!,
                     placeStartQuest!!,
-                    imgDetailsQuest!!
+                    imgDetailsQuest!!,
+                    accessCode!!
                 )
             )
         }

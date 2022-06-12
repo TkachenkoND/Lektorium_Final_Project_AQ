@@ -1,5 +1,6 @@
 package com.example.autoquest.data.helper
 
+import androidx.room.ColumnInfo
 import com.example.autoquest.data.database.entity.QuestItemEntity
 import com.example.autoquest.data.database.entity.QuestTaskEntity
 import com.example.autoquest.domain.models.QuestItem
@@ -9,17 +10,15 @@ fun QuestTask.toQuestTaskEntity() = QuestTaskEntity(
     questsId = questsId,
     textTask = textTask,
     answerTask = answerTask,
-    accessCode = accessCode,
     latitude = latitude,
     longitude = longitude,
-    questTaskImg = questTaskImg
+    questTaskImg = questTaskImg,
 )
 
 fun QuestTaskEntity.toQuestTask() = QuestTask(
     questsId = questsId,
     textTask = textTask,
     answerTask = answerTask,
-    accessCode = accessCode,
     latitude = latitude,
     longitude = longitude,
     questTaskImg = questTaskImg
@@ -35,7 +34,8 @@ fun QuestItem.toQuestItemEntity() = QuestItemEntity(
     timeQuest = timeQuest,
     placeStartQuest = placeStartQuest,
     imgDetailsQuest = imgDetailsQuest,
-    isFavorite = isFavorite
+    isFavorite = isFavorite,
+    accessCode = accessCode
 )
 
 fun QuestItemEntity.toQuestItem() = QuestItem(
@@ -48,5 +48,6 @@ fun QuestItemEntity.toQuestItem() = QuestItem(
     timeQuest = timeQuest,
     placeStartQuest = placeStartQuest,
     imgDetailsQuest = imgDetailsQuest,
-    isFavorite = isFavorite
+    isFavorite = isFavorite,
+    accessCode = accessCode
 )

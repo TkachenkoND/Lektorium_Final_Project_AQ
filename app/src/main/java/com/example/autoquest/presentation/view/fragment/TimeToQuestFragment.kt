@@ -35,14 +35,14 @@ class TimeToQuestFragment : BaseFragment<QuestFragmentBinding>(DetailsQuestItemF
             sharedVm.questId.collect { id ->
                 val questItem = sharedVm.fetchQuestItemFromFbVm(id)
                 if (questItem != null)
-                    initTimeToQuestUi(questItem.timeQuest, questItem.dataQuest)
+                    initTimeToQuestUi(questItem)
             }
         }
     }
 
-    private fun initTimeToQuestUi(time: String, data: String) {
+    private fun initTimeToQuestUi(questItem: QuestItem) {
         val currentTime = Calendar.getInstance().time
-        val endDateDay = "$data $time"
+        val endDateDay = "${questItem.dataQuest} ${questItem.timeQuest}"
         val format1 = SimpleDateFormat("dd/MM/yyyy hh:mm:ss", Locale.getDefault())
         val endDate = format1.parse(endDateDay)
 
@@ -73,17 +73,30 @@ class TimeToQuestFragment : BaseFragment<QuestFragmentBinding>(DetailsQuestItemF
             }
 
             override fun onFinish() {
-                binding.apply {
-                    timeQuest.visibility = View.GONE
-                    timeTxt.visibility = View.GONE
-
-                    btnConfirm.visibility = View.VISIBLE
-                    questCodeEdit.visibility = View.VISIBLE
-                    codeTxt.visibility = View.VISIBLE
-                }
+                initUiToFinishTimer(questItem)
             }
         }.start()
 
+    }
+
+    private fun initUiToFinishTimer(questItem: QuestItem) {
+        binding.apply {
+
+            timeQuest.visibility = View.GONE
+            timeTxt.visibility = View.GONE
+
+            btnConfirm.visibility = View.VISIBLE
+            questCodeEdit.visibility = View.VISIBLE
+            codeTxt.visibility = View.VISIBLE
+
+            btnConfirm.setOnClickListener {
+                if (questCodeEdit.text.toString() == questItem.accessCode)
+                    goToNextFragment(QuestTaskFragment())
+                else {
+                    //toast
+                }
+            }
+        }
     }
 
 }
