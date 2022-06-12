@@ -11,6 +11,7 @@ import com.example.autoquest.domain.models.QuestItem
 import com.example.autoquest.presentation.view.adapter.ClickOnTheFavorite
 import com.example.autoquest.presentation.view.adapter.ClickOnTheItem
 import com.example.autoquest.presentation.view.adapter.ListOfQuestsAdapter
+import com.example.autoquest.presentation.view.dialog.ClickExitTheAppDialogBtn
 import com.example.autoquest.presentation.view_model.ListOfQuestsViewModel
 import com.example.autoquest.presentation.view_model.SharedViewModel
 import kotlinx.coroutines.launch
@@ -18,8 +19,11 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ListOfQuestsFragment : BaseFragment<ListOfQuestsFragmentBinding>(null), ClickOnTheItem,
-    ClickOnTheFavorite {
+class ListOfQuestsFragment :
+    BaseFragment<ListOfQuestsFragmentBinding>(null),
+    ClickOnTheItem,
+    ClickOnTheFavorite,
+    ClickExitTheAppDialogBtn {
 
     private val listOfQuestsAdapter =
         ListOfQuestsAdapter(
@@ -40,16 +44,25 @@ class ListOfQuestsFragment : BaseFragment<ListOfQuestsFragmentBinding>(null), Cl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        listOfQuestsVm.fetchQuestTaskListFromFbVm()
+        sharedVm.fetchQuestTaskListFromFbVm()
+        sharedVm.fetchQuestItemListFromFbVm()
 
+        initRegisteredUser()
         initRvAdapter()
         initObserveQuestItemList()
         setClickListener()
     }
 
-    private fun initObserveQuestItemList() {
-        sharedVm.fetchQuestItemListFromFbVm()
+    private fun initRegisteredUser() {
+        lifecycleScope.launch {
+            sharedVm.isRegistered.collect {
+                if (it)
+                    binding.registerBtn.visibility = View.GONE
+            }
+        }
+    }
 
+    private fun initObserveQuestItemList() {
         lifecycleScope.launch {
             sharedVm.questItemList.collect {
                 listOfQuests = it.questItemList
@@ -101,6 +114,15 @@ class ListOfQuestsFragment : BaseFragment<ListOfQuestsFragmentBinding>(null), Cl
     override fun favoritePress(isFavorite: Boolean) {
         listOfQuestsVm.updateQuestIsFavoriteInFb(isFavorite)
         sharedVm.fetchQuestItemListFromFbVm()
+    }
+
+    override fun dialogBtnPress() {
+        activity?.finish()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        sharedVm.setUserRegisterStatus()
     }
 
 }

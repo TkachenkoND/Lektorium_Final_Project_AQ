@@ -27,4 +27,8 @@
     <string name="signin">SignIn</string>
     <string name="facebook_sign">facebook sign</string>
     <string name="participate_btn_txt">Прийняти участь</string>
+    <string name="enter_answer_txt">введіть відповідь</string>
+    <string name="btn_chek_txt">Перевірити</string>
+    <string name="title_exit_dialog">Вихід</string>
+    <string name="messege_exit_dialog">Ви дійсно хочете вийти ?</string>
 </resources>

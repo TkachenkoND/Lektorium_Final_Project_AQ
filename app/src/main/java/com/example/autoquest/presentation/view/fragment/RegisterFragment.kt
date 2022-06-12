@@ -1,6 +1,6 @@
 package com.example.autoquest.presentation.view.fragment
 
-import android.content.ContentValues.TAG
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,10 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.lifecycleScope
 import com.example.autoquest.R
 import com.example.autoquest.databinding.RegisterFragmentBinding
-import com.example.autoquest.presentation.view_model.DetailsQuestItemFragmentViewModel
+import com.example.autoquest.domain.models.GoogleUserData
+import com.example.autoquest.presentation.view_model.SharedViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -21,43 +22,23 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class RegisterFragment : BaseFragment<RegisterFragmentBinding>(ListOfQuestsFragment()) {
 
-    private val sharedVm by sharedViewModel<DetailsQuestItemFragmentViewModel>()
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var auth: FirebaseAuth
+
+    private val sharedVm by sharedViewModel<SharedViewModel>()
 
     companion object {
         const val RC_SIGN_IN = 1001
     }
 
-    private lateinit var googleSignInClient: GoogleSignInClient
-    private lateinit var auth: FirebaseAuth
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                goToNextFragment(ListOfQuestsFragment())
-            }
-        })
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account = task.getResult(ApiException::class.java)!!
-                Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
-                firebaseAuthWithGoogle(account.idToken!!)
-            } catch (e: ApiException) {
-                Log.w(TAG, "Google sign in failed", e)
-            }
-        }
-
+        signInGoogle(requestCode, data)
     }
 
     override fun initBinding(
@@ -75,6 +56,7 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding>(ListOfQuestsFragm
 
     private fun setClickListener() {
         binding.googleSignBtn.setOnClickListener {
+
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
@@ -89,11 +71,15 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding>(ListOfQuestsFragm
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
     }
 
-    private fun updateUI(user: FirebaseUser?) {
-        if (user != null) {
-            Toast.makeText(requireContext(), "Hello ${user.displayName} !", Toast.LENGTH_SHORT)
-                .show()
-            goToNextFragment(ListOfQuestsFragment())
+    private fun signInGoogle(requestCode: Int, data: Intent?) {
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+                firebaseAuthWithGoogle(account.idToken!!)
+            } catch (e: ApiException) {
+                Log.w(ContentValues.TAG, "Google sign in failed", e)
+            }
         }
     }
 
@@ -102,14 +88,28 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding>(ListOfQuestsFragm
         auth.signInWithCredential(credential)
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
-                    Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
                     updateUI(user)
                 } else {
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
                     updateUI(null)
                 }
             }
     }
+
+    private fun updateUI(user: FirebaseUser?) {
+        if (user != null) {
+            val userData = GoogleUserData(user.displayName, user.photoUrl, user.tenantId)
+            //registerFragmentVm.addUserToFireStoreVm(userData)
+
+            Toast.makeText(requireContext(), "Hello ${user.displayName} !", Toast.LENGTH_SHORT)
+                .show()
+
+            goToNextFragment(ListOfQuestsFragment())
+        } else {
+            Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
+
 
 }

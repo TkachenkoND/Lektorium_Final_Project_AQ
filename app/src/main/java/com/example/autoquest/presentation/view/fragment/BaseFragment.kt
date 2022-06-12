@@ -1,6 +1,9 @@
 package com.example.autoquest.presentation.view.fragment
 
+import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.viewbinding.ViewBinding
 import com.example.autoquest.R
+import com.example.autoquest.presentation.view.dialog.ClickExitTheAppDialogBtn
+import com.example.autoquest.presentation.view.dialog.ExitTheAppDialog
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
 
 abstract class BaseFragment<B : ViewBinding>(private val fragment: Fragment?) : Fragment() {
 
@@ -28,9 +35,12 @@ abstract class BaseFragment<B : ViewBinding>(private val fragment: Fragment?) : 
 
         activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (fragment == null)
-                    activity?.finish()
-                else
+                if (fragment == null) {
+                    ExitTheAppDialog(this@BaseFragment as ClickExitTheAppDialogBtn).show(
+                        childFragmentManager,
+                        ExitTheAppDialog.TAG
+                    )
+                } else
                     goToNextFragment(fragment)
             }
         })

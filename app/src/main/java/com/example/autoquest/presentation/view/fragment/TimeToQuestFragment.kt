@@ -5,7 +5,6 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.autoquest.databinding.QuestFragmentBinding
 import com.example.autoquest.domain.models.QuestItem
@@ -81,17 +80,12 @@ class TimeToQuestFragment : BaseFragment<QuestFragmentBinding>(DetailsQuestItemF
 
     private fun initUiToFinishTimer(questItem: QuestItem) {
         binding.apply {
-
-            timeQuest.visibility = View.GONE
-            timeTxt.visibility = View.GONE
-
-            btnConfirm.visibility = View.VISIBLE
-            questCodeEdit.visibility = View.VISIBLE
-            codeTxt.visibility = View.VISIBLE
+            questTimeLayout.visibility = View.GONE
+            questCodeLayout.visibility = View.VISIBLE
 
             btnConfirm.setOnClickListener {
                 if (questCodeEdit.text.toString() == questItem.accessCode)
-                    goToNextFragment(QuestTaskFragment())
+                    goToNextFragment(QuestTaskAndLocationFragment())
                 else {
                     //toast
                 }

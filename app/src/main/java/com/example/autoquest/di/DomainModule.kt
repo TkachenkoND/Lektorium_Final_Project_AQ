@@ -13,4 +13,5 @@ val domainModule = module {
     factory { UpdateIsFavoriteInFbUseCase(get()) }
     factory { UpdateItemInDbUseCase(get()) }
     factory { LocateUseCase(get()) }
+    factory { CheckUserRegisterStatusUseCase(get()) }
 }
