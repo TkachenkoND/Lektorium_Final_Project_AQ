@@ -1,4 +1,4 @@
-package com.example.autoquest.presentation.view.fargment
+package com.example.autoquest.presentation.view.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

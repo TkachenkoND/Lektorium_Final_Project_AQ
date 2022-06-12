@@ -14,6 +14,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 
 class LocateRepositoryImpl(private val context: Context) : LocateRepository, OnMapReadyCallback {
 
@@ -28,18 +30,18 @@ class LocateRepositoryImpl(private val context: Context) : LocateRepository, OnM
         latitude: Double,
         longitude: Double,
         mapFragment: SupportMapFragment
-    ) : Boolean {
-        var _isAtAppointedPlace: Boolean? = null
+    ) {
+        latitudeRepo = latitude
+        longitudeRepo = longitude
 
         val locationListener = object : LocationListener {
+
             override fun onLocationChanged(location: Location) {
                 if (longitude == location.longitude && latitude == location.latitude) {
                         Toast.makeText(context, "Ви в назначеному місці", Toast.LENGTH_SHORT)
                             .show()
-                    _isAtAppointedPlace = true
                 }
                 else{
-                    _isAtAppointedPlace = false
                     Toast.makeText(
                         context,
                         "Просувайтеся на вказану точку!",
@@ -47,13 +49,12 @@ class LocateRepositoryImpl(private val context: Context) : LocateRepository, OnM
                     ).show()
                 }
             }
-
             override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
             override fun onProviderEnabled(provider: String) {}
             override fun onProviderDisabled(provider: String) {}
         }
 
-        mapFragment.getMapAsync(this)
+        mapFragment.getMapAsync(this@LocateRepositoryImpl)
 
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
@@ -64,11 +65,10 @@ class LocateRepositoryImpl(private val context: Context) : LocateRepository, OnM
                 0f,
                 locationListener
             )
+
         } catch (ex: SecurityException) {
             Log.d("myTag", ex.toString())
         }
-
-        return _isAtAppointedPlace!!
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

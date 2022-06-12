@@ -1,4 +1,4 @@
-package com.example.autoquest.presentation.view.fargment
+package com.example.autoquest.presentation.view.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,15 +8,14 @@ import androidx.lifecycle.lifecycleScope
 import com.example.autoquest.R
 import com.example.autoquest.databinding.LocationFragmentBinding
 import com.example.autoquest.domain.models.QuestTask
-import com.example.autoquest.presentation.view.fragment.QuestFragment
-import com.example.autoquest.presentation.view_model.QuestSharedViewModel
+import com.example.autoquest.presentation.view_model.DetailsQuestItemFragmentViewModel
 import com.google.android.gms.maps.SupportMapFragment
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class QuestTaskFragment : BaseFragment<LocationFragmentBinding>(QuestFragment()) {
+class QuestTaskFragment : BaseFragment<LocationFragmentBinding>(TimeToQuestFragment()) {
 
-    private val sharedVm by sharedViewModel<QuestSharedViewModel>()
+    private val sharedVm by sharedViewModel<DetailsQuestItemFragmentViewModel>()
 
     private var questTaskId: Int? = null
 
@@ -32,16 +31,16 @@ class QuestTaskFragment : BaseFragment<LocationFragmentBinding>(QuestFragment())
     }
 
     private fun initQuestTaskId() {
-        sharedVm.fetchQuestTaskListFromFbVm()
-
         lifecycleScope.launch {
 
             sharedVm.questTaskId.collect { id ->
                 val questTask = sharedVm.fetchQuestTaskFromFbVm(id)
                 val questTaskListSize = sharedVm.getQuestTaskListSize
 
-                initQuestTaskUi(questTask!!, 0)
-               initLocationListener(questTask)
+                if (questTask != null && questTaskListSize != null) {
+                    //initQuestTaskUi(questTask, questTaskListSize)
+                    initLocationListener(questTask)
+                }
             }
         }
     }
@@ -52,27 +51,23 @@ class QuestTaskFragment : BaseFragment<LocationFragmentBinding>(QuestFragment())
             R.id.map_fragment
         ) as SupportMapFragment
 
-        if (sharedVm.getLocate(questTask.latitude, questTask.longitude, mapFragment)) {
-            binding.questTaskFragment.visibility = View.VISIBLE
-            binding.mapFragment.visibility = View.GONE
-            binding.questTaskText.visibility = View.VISIBLE
-        }
+        sharedVm.getLocate(questTask.latitude, questTask.longitude, mapFragment)
 
     }
 
     private fun initQuestTaskUi(questTask: QuestTask, questTaskListSize: Int) {
         // init quest fragment ui
-        binding.answerText.text = questTask.answerTask
-
-        val userAnswer = binding.editUserAnswer.text.toString()
+        binding.answerText.text = questTask.textTask
 
         binding.checkAnswerBtn.setOnClickListener {
+            val userAnswer = binding.editUserAnswer.text.toString()
+
             if (userAnswer == questTask.answerTask && questTaskId != null) {
                 val nextQuestTaskId = questTaskId!! + 1
 
                 if (nextQuestTaskId < questTaskListSize) {
                     binding.questTaskFragment.visibility = View.GONE
-                    binding.mapFragment.visibility = View.VISIBLE
+                    binding.mapLayout.visibility = View.VISIBLE
 
                     sharedVm.setQuestTaskId(nextQuestTaskId)
                 }

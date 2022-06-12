@@ -1,4 +1,4 @@
-package com.example.autoquest.presentation.view.fargment
+package com.example.autoquest.presentation.view.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,10 +11,12 @@ import com.example.autoquest.domain.models.QuestItem
 import com.example.autoquest.presentation.view.adapter.ClickOnTheFavorite
 import com.example.autoquest.presentation.view.adapter.ClickOnTheItem
 import com.example.autoquest.presentation.view.adapter.ListOfQuestsAdapter
-import com.example.autoquest.presentation.view_model.QuestSharedViewModel
+import com.example.autoquest.presentation.view_model.ListOfQuestsViewModel
+import com.example.autoquest.presentation.view_model.SharedViewModel
 import kotlinx.coroutines.launch
-
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ListOfQuestsFragment : BaseFragment<ListOfQuestsFragmentBinding>(null), ClickOnTheItem,
     ClickOnTheFavorite {
@@ -25,7 +27,8 @@ class ListOfQuestsFragment : BaseFragment<ListOfQuestsFragmentBinding>(null), Cl
             this@ListOfQuestsFragment as ClickOnTheFavorite
         )
 
-    private val listOfQuestsVm by sharedViewModel<QuestSharedViewModel>()
+    private val listOfQuestsVm by viewModel<ListOfQuestsViewModel>()
+    private val sharedVm by sharedViewModel<SharedViewModel>()
 
     private var listOfQuests: List<QuestItem>? = null
 
@@ -37,16 +40,18 @@ class ListOfQuestsFragment : BaseFragment<ListOfQuestsFragmentBinding>(null), Cl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        listOfQuestsVm.fetchQuestTaskListFromFbVm()
+
         initRvAdapter()
         initObserveQuestItemList()
         setClickListener()
     }
 
     private fun initObserveQuestItemList() {
-        listOfQuestsVm.fetchQuestItemListFromFbVm()
+        sharedVm.fetchQuestItemListFromFbVm()
 
         lifecycleScope.launch {
-            listOfQuestsVm.questItemList.collect {
+            sharedVm.questItemList.collect {
                 listOfQuests = it.questItemList
                 listOfQuestsAdapter.submitList(it.questItemList)
                 binding.progressBar.visibility = View.GONE
@@ -89,13 +94,13 @@ class ListOfQuestsFragment : BaseFragment<ListOfQuestsFragmentBinding>(null), Cl
     }
 
     override fun itemPress(questItem: QuestItem) {
-        listOfQuestsVm.setQuestId(questItem.questsId)
+        sharedVm.setQuestId(questItem.questsId)
         goToNextFragment(DetailsQuestItemFragment())
     }
 
     override fun favoritePress(isFavorite: Boolean) {
         listOfQuestsVm.updateQuestIsFavoriteInFb(isFavorite)
-        listOfQuestsVm.fetchQuestItemListFromFbVm()
+        sharedVm.fetchQuestItemListFromFbVm()
     }
 
 }

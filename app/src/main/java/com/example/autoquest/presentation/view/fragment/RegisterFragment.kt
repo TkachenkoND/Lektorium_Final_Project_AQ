@@ -1,4 +1,4 @@
-package com.example.autoquest.presentation.view.fargment
+package com.example.autoquest.presentation.view.fragment
 
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import com.example.autoquest.R
 import com.example.autoquest.databinding.RegisterFragmentBinding
-import com.example.autoquest.presentation.view_model.QuestSharedViewModel
+import com.example.autoquest.presentation.view_model.DetailsQuestItemFragmentViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -25,7 +25,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class RegisterFragment : BaseFragment<RegisterFragmentBinding>(ListOfQuestsFragment()) {
 
-    private val sharedVm by sharedViewModel<QuestSharedViewModel>()
+    private val sharedVm by sharedViewModel<DetailsQuestItemFragmentViewModel>()
 
     companion object {
         const val RC_SIGN_IN = 1001

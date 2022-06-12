@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.commit
 import com.example.autoquest.R
 import com.example.autoquest.databinding.ActivityMainBinding
-import com.example.autoquest.presentation.view.fargment.ListOfQuestsFragment
+import com.example.autoquest.presentation.view.fragment.ListOfQuestsFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

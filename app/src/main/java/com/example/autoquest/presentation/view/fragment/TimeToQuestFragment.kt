@@ -6,29 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.lifecycleScope
 import com.example.autoquest.databinding.QuestFragmentBinding
-import com.example.autoquest.presentation.view.fargment.BaseFragment
-import com.example.autoquest.presentation.view.fargment.DetailsQuestItemFragment
-import com.example.autoquest.presentation.view.fargment.ListOfQuestsFragment
-import com.example.autoquest.presentation.view_model.QuestSharedViewModel
+import com.example.autoquest.domain.models.QuestItem
+import com.example.autoquest.presentation.view_model.SharedViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-class QuestFragment : BaseFragment<QuestFragmentBinding>(DetailsQuestItemFragment()) {
+class TimeToQuestFragment : BaseFragment<QuestFragmentBinding>(DetailsQuestItemFragment()) {
 
-    private val sharedVm by sharedViewModel<QuestSharedViewModel>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                goToNextFragment(ListOfQuestsFragment())
-            }
-        })
-    }
+    private val sharedVm by sharedViewModel<SharedViewModel>()
 
     override fun initBinding(
         inflater: LayoutInflater,
@@ -38,10 +27,20 @@ class QuestFragment : BaseFragment<QuestFragmentBinding>(DetailsQuestItemFragmen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        initObserveQuestId()
     }
 
-    private fun startInitUi(time: String, data: String) {
+    private fun initObserveQuestId() {
+        lifecycleScope.launch {
+            sharedVm.questId.collect { id ->
+                val questItem = sharedVm.fetchQuestItemFromFbVm(id)
+                if (questItem != null)
+                    initTimeToQuestUi(questItem.timeQuest, questItem.dataQuest)
+            }
+        }
+    }
+
+    private fun initTimeToQuestUi(time: String, data: String) {
         val currentTime = Calendar.getInstance().time
         val endDateDay = "$data $time"
         val format1 = SimpleDateFormat("dd/MM/yyyy hh:mm:ss", Locale.getDefault())
@@ -85,10 +84,6 @@ class QuestFragment : BaseFragment<QuestFragmentBinding>(DetailsQuestItemFragmen
             }
         }.start()
 
-    }
-
-    private fun showToast(str: String) {
-        Toast.makeText(requireContext(), str, Toast.LENGTH_SHORT).show()
     }
 
 }

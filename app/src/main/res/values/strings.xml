@@ -26,4 +26,5 @@
     <string name="Good">Підтвердити</string>
     <string name="signin">SignIn</string>
     <string name="facebook_sign">facebook sign</string>
+    <string name="participate_btn_txt">Прийняти участь</string>
 </resources>

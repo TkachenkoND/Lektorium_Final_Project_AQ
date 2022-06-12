@@ -98,6 +98,13 @@
             android:layout_gravity="bottom"
             android:text="@string/registerTxtBtn" />
 
+        <Button
+            android:id="@+id/participateBtn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="10dp"
+            android:text="@string/participate_btn_txt" />
+
     </LinearLayout>
 
 </LinearLayout>
