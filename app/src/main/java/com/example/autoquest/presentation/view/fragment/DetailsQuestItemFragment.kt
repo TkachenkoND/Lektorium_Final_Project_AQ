@@ -34,17 +34,17 @@ class DetailsQuestItemFragment :
     }
 
     private fun initRegisteredUser() {
-        lifecycleScope.launch {
-            sharedVm.isRegistered.collect {
-                if (it) {
+        //lifecycleScope.launch {
+            //sharedVm.isRegistered.collect {
+               // if (it) {
                     binding.universalBtn.text = getString(R.string.participate_btn_txt)
-                    setClickBtnListener(it)
-                } else {
-                    binding.universalBtn.text = getString(R.string.registerTxtBtn)
-                    setClickBtnListener(it)
-                }
-            }
-        }
+                    setClickBtnListener(true)
+               // } else {
+                   // binding.universalBtn.text = getString(R.string.registerTxtBtn)
+                   // setClickBtnListener(it)
+               // }
+           // }
+       // }
     }
 
     private fun initObserveQuestId() {
