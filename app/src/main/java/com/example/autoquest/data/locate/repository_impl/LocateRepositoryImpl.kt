@@ -46,6 +46,8 @@ class LocateRepositoryImpl(
                     ) < 0.0000001
                 ) {
                     locationListenerCallback.invoke(true)
+                    locationManager!!.removeUpdates(this)
+
                     mMap.clear()
                 } else {
                     locationListenerCallback.invoke(false)
