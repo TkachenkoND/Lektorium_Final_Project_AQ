@@ -67,8 +67,13 @@ class TimeToQuestFragment : BaseFragment<QuestFragmentBinding>(DetailsQuestItemF
 
                 val elapsedSeconds = diff / secondsInMilli
 
-                binding.timeQuest.text =
-                    "$elapsedDays днів $elapsedHours:$elapsedMinutes:$elapsedSeconds"
+                try {
+                    binding.timeQuest.text =
+                        "$elapsedDays днів $elapsedHours:$elapsedMinutes:$elapsedSeconds"
+                } catch (e: Exception){
+                    this.cancel()
+                }
+
             }
 
             override fun onFinish() {
