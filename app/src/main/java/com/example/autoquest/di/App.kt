@@ -21,7 +21,7 @@ class App : Application() {
                     viewModelModule,
                     dataModule,
                     domainModule,
-                    dbModule
+                    dbModule,
                 )
             )
         }

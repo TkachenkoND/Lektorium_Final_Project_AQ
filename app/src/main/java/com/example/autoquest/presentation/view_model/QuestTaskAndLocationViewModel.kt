@@ -8,7 +8,10 @@ class QuestTaskAndLocationViewModel(
     private val locateUseCase: LocateUseCase
 ) : ViewModel() {
     //Locate
-    fun getLocate(latitude: Double, longitude: Double, mapFragment: SupportMapFragment) {
-        locateUseCase.execute(latitude, longitude, mapFragment)
-    }
+    fun getLocate(
+        latitude: Double,
+        longitude: Double,
+        mapFragment: SupportMapFragment,
+        locationListenerCallback: (result: Boolean?) -> Unit
+    ) = locateUseCase.execute(latitude, longitude, mapFragment, locationListenerCallback)
 }

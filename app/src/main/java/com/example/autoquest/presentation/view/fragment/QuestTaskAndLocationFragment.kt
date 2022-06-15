@@ -26,6 +26,10 @@ class QuestTaskAndLocationFragment :
     private val questTaskAndLocationVm by viewModel<QuestTaskAndLocationViewModel>()
 
     private var questTaskId = 0
+    private var questTask: QuestTask? = null
+    private var questTaskListSize = 0
+
+    private var mapFragment: SupportMapFragment? = null
 
     override fun initBinding(
         inflater: LayoutInflater,
@@ -35,20 +39,26 @@ class QuestTaskAndLocationFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        questTaskListSize = sharedVm.fetchTaskListSize()
+
+        initMapFragment()
         initQuestTaskId()
+    }
+
+    private fun initMapFragment() {
+        mapFragment = childFragmentManager.findFragmentById(
+            R.id.map_fragment
+        ) as SupportMapFragment
     }
 
     private fun initQuestTaskId() {
         lifecycleScope.launch {
-
             sharedVm.questTaskId.collect { id ->
-                val questTask = sharedVm.fetchQuestTaskFromFbVm(id)
-                val questTaskListSize = sharedVm.fetchTaskListSize()
+                questTask = sharedVm.fetchQuestTaskFromFbVm(id)
                 questTaskId = id
 
-                if (questTask != null) {
-                    //initQuestTaskUi(questTask, questTaskListSize)
-                    initLocationListener(questTask)
+                if (questTask != null){
+                    initLocationListener(questTask!!)
                 }
             }
         }
@@ -58,20 +68,26 @@ class QuestTaskAndLocationFragment :
         binding.questTaskFragment.visibility = View.GONE
         binding.mapLayout.visibility = View.VISIBLE
 
-        val mapFragment = childFragmentManager.findFragmentById(
-            R.id.map_fragment
-        ) as SupportMapFragment
-
-        questTaskAndLocationVm.getLocate(questTask.latitude, questTask.longitude, mapFragment)
-
+        questTaskAndLocationVm.getLocate(
+            questTask.latitude,
+            questTask.longitude,
+            mapFragment!!
+        ) { result ->
+            if (result!!) {
+                showToast("Ви в назначеному місці")
+                initQuestTaskUi(questTask)
+            } else {
+                showToast("Просувайтеся на вказану точку!")
+            }
+        }
     }
 
-    private fun initQuestTaskUi(questTask: QuestTask, questTaskListSize: Int) {
+    private fun initQuestTaskUi(questTask: QuestTask) {
         binding.apply {
-            mapLayout.visibility = View.GONE
-            questTaskFragment.visibility = View.VISIBLE
+            binding.questTaskFragment.visibility = View.VISIBLE
+            binding.mapLayout.visibility = View.GONE
 
-            answerText.text = questTask.textTask
+            taskText.text = questTask.textTask
 
             if (questTask.questTaskImg != "") {
                 Glide.with(questTaskImg.context)
@@ -83,32 +99,37 @@ class QuestTaskAndLocationFragment :
             }
 
             checkAnswerBtn.setOnClickListener {
-                val userAnswer = binding.editUserAnswer.text.toString()
+                val userAnswer = editUserAnswer.text.toString()
 
                 if (userAnswer == questTask.answerTask) {
                     //addPointsToUser()
-
-                    val nextQuestTaskId = questTaskId + 1
-
-                    if (nextQuestTaskId < questTaskListSize) {
-                        binding.questTaskFragment.visibility = View.GONE
-                        binding.mapLayout.visibility = View.VISIBLE
-
-                        sharedVm.setQuestTaskId(nextQuestTaskId)
-                    } else {
-                        // go to final fragment
-                    }
+                    goToNextTask()
                 } else {
-                    Toast.makeText(requireContext(), "Відповідь не правильна(", Toast.LENGTH_SHORT)
-                        .show()
+                    showToast("Відповідь не правильна(")
                 }
 
             }
         }
     }
 
+    private fun goToNextTask() {
+        val nextQuestTaskId = questTaskId + 1
+
+        if (nextQuestTaskId < questTaskListSize){
+            sharedVm.setQuestTaskId(nextQuestTaskId)
+            binding.questTaskFragment.visibility = View.GONE
+            binding.mapLayout.visibility = View.VISIBLE
+        }
+        else {
+            // go to final fragment
+        }
+    }
+
+    private fun showToast(toastTxt: String) {
+        Toast.makeText(context, toastTxt, Toast.LENGTH_SHORT).show()
+    }
+
     override fun dialogBtnPress() {
-        //save data and exit the app
         activity?.finish()
     }
 

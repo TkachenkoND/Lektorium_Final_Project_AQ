@@ -34,7 +34,5 @@ val dataModule = module {
     single<UpdateQuestIsFavoriteInFbRepository> { UpdateQuestIsFavoriteInFbRepositoryImpl(get()) }
 
     single<CheckUserRegisterStatusRepository> { CheckUserRegisterStatusRepositoryImpl(get()) }
-
     single<LocateRepository> { LocateRepositoryImpl(get()) }
-
 }

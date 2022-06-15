@@ -6,7 +6,6 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import com.example.autoquest.domain.repository.locate_repository.LocateRepository
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -14,10 +13,11 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlin.math.pow
 
-class LocateRepositoryImpl(private val context: Context) : LocateRepository, OnMapReadyCallback {
+class LocateRepositoryImpl(
+    private val context: Context,
+) : LocateRepository, OnMapReadyCallback {
 
     var locationManager: LocationManager? = null
 
@@ -29,7 +29,8 @@ class LocateRepositoryImpl(private val context: Context) : LocateRepository, OnM
     override fun getLocationListener(
         latitude: Double,
         longitude: Double,
-        mapFragment: SupportMapFragment
+        mapFragment: SupportMapFragment,
+        locationListenerCallback: (result: Boolean?) -> Unit
     ) {
         latitudeRepo = latitude
         longitudeRepo = longitude
@@ -37,18 +38,20 @@ class LocateRepositoryImpl(private val context: Context) : LocateRepository, OnM
         val locationListener = object : LocationListener {
 
             override fun onLocationChanged(location: Location) {
-                if (longitude == location.longitude && latitude == location.latitude) {
-                        Toast.makeText(context, "Ви в назначеному місці", Toast.LENGTH_SHORT)
-                            .show()
-                }
-                else{
-                    Toast.makeText(
-                        context,
-                        "Просувайтеся на вказану точку!",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                if ((location.latitude - latitude).pow(2.0) + (location.longitude - longitude).pow(
+                        2.0
+                    ) == 0.0000001
+                    || (location.latitude - latitude).pow(2.0) + (location.longitude - longitude).pow(
+                        2.0
+                    ) < 0.0000001
+                ) {
+                    locationListenerCallback.invoke(true)
+                    mMap.clear()
+                } else {
+                    locationListenerCallback.invoke(false)
                 }
             }
+
             override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
             override fun onProviderEnabled(provider: String) {}
             override fun onProviderDisabled(provider: String) {}
@@ -65,7 +68,6 @@ class LocateRepositoryImpl(private val context: Context) : LocateRepository, OnM
                 0f,
                 locationListener
             )
-
         } catch (ex: SecurityException) {
             Log.d("myTag", ex.toString())
         }
@@ -82,4 +84,5 @@ class LocateRepositoryImpl(private val context: Context) : LocateRepository, OnM
         )
         mMap.moveCamera(CameraUpdateFactory.newLatLng(locate))
     }
+
 }
