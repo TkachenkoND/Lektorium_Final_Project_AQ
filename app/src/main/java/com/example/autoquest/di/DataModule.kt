@@ -4,20 +4,14 @@ import com.example.autoquest.data.database.repository_impl.FetchAllQuestItemFrom
 import com.example.autoquest.data.database.repository_impl.FetchDataQuestItemFromDbRepositoryImpl
 import com.example.autoquest.data.database.repository_impl.InsertQuestItemInDbRepositoryImpl
 import com.example.autoquest.data.database.repository_impl.UpdateQuestItemInDbRepositoryImpl
-import com.example.autoquest.data.fireBase.repository_impl.FetchFavoriteQuestItemFromFbRepositoryImpl
-import com.example.autoquest.data.fireBase.repository_impl.FetchQuestItemListFromFbRepositoryImpl
-import com.example.autoquest.data.fireBase.repository_impl.FetchQuestTaskListFromFbRepositoryImpl
-import com.example.autoquest.data.fireBase.repository_impl.UpdateQuestIsFavoriteInFbRepositoryImpl
+import com.example.autoquest.data.fireBase.repository_impl.*
 import com.example.autoquest.data.google_signIn.CheckUserRegisterStatusRepositoryImpl
 import com.example.autoquest.data.locate.repository_impl.LocateRepositoryImpl
 import com.example.autoquest.domain.repository.database_repository.FetchAllQuestItemFromDbRepository
 import com.example.autoquest.domain.repository.database_repository.FetchDataQuestItemFromDbRepository
 import com.example.autoquest.domain.repository.database_repository.InsertQuestItemInDbRepository
 import com.example.autoquest.domain.repository.database_repository.UpdateQuestItemInDbRepository
-import com.example.autoquest.domain.repository.fireBase_repository.FetchFavoriteQuestItemFromFbRepository
-import com.example.autoquest.domain.repository.fireBase_repository.FetchQuestItemListFromFbRepository
-import com.example.autoquest.domain.repository.fireBase_repository.FetchQuestTaskListFromFbRepository
-import com.example.autoquest.domain.repository.fireBase_repository.UpdateQuestIsFavoriteInFbRepository
+import com.example.autoquest.domain.repository.fireBase_repository.*
 import com.example.autoquest.domain.repository.google_signIn.CheckUserRegisterStatusRepository
 import com.example.autoquest.domain.repository.locate_repository.LocateRepository
 import org.koin.dsl.module
@@ -35,4 +29,6 @@ val dataModule = module {
 
     single<CheckUserRegisterStatusRepository> { CheckUserRegisterStatusRepositoryImpl(get()) }
     single<LocateRepository> { LocateRepositoryImpl(get()) }
+
+    single<SaveUserInFireBaseRepository> { SaveUserInFireBaseRepositoryImpl(get()) }
 }

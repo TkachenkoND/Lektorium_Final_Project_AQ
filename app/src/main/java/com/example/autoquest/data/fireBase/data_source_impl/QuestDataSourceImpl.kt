@@ -137,7 +137,9 @@ class QuestDataSourceImpl(
 
     override suspend fun updateQuestIsFavorite(isFavorite: Boolean, questId: Int) {
 
+    }
 
+    override fun saveUserInFb(userId: Int, userName: String, userImg: String) {
     }
 
 }
