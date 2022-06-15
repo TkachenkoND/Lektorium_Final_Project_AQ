@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
 import com.example.autoquest.R
 import com.example.autoquest.databinding.RegisterFragmentBinding
 import com.example.autoquest.domain.models.GoogleUserData
@@ -22,7 +21,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class RegisterFragment : BaseFragment<RegisterFragmentBinding>(ListOfQuestsFragment()) {
@@ -110,6 +108,5 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding>(ListOfQuestsFragm
                 .show()
         }
     }
-
 
 }
