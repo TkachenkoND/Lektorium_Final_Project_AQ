@@ -90,13 +90,7 @@ class ListOfQuestsFragment :
     }
 
     private fun setClickOnBtnOnlyFavorite() {
-        listOfQuestsVm.fetchFavoriteQuestItemFromFbVm()
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            listOfQuestsVm.onlyFavoriteQuests.collect {
-                listOfQuestsAdapter.submitList(it.questItemList)
-            }
-        }
     }
 
     private fun initRvAdapter() {
@@ -112,17 +106,12 @@ class ListOfQuestsFragment :
     }
 
     override fun favoritePress(isFavorite: Boolean, questId: Int) {
-        listOfQuestsVm.updateQuestIsFavoriteInFb(isFavorite, questId)
+        listOfQuestsVm.addQuestToFavourites(isFavorite, questId)
         sharedVm.fetchQuestItemListFromFbVm()
     }
 
     override fun dialogBtnPress() {
         activity?.finish()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        sharedVm.setUserRegisterStatus()
     }
 
 }

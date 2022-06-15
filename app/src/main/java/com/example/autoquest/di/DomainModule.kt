@@ -6,13 +6,12 @@ import org.koin.dsl.module
 val domainModule = module {
     factory { FetchAllItemFromDbUseCase(get()) }
     factory { FetchDataItemFromDbUseCase(get()) }
-    factory { FetchFavoriteItemFromFbUseCase(get()) }
+    factory { FetchUserFavouriteQuestsUseCase(get()) }
     factory { FetchTaskListFromFbUseCase(get()) }
     factory { FetchItemListFromFbUseCase(get()) }
     factory { InsertItemInDbUseCase(get()) }
-    factory { UpdateIsFavoriteInFbUseCase(get()) }
-    factory { UpdateItemInDbUseCase(get()) }
+    factory { AddQuestToFavouritesUseCase(get()) }
     factory { LocateUseCase(get()) }
-    factory { CheckUserRegisterStatusUseCase(get()) }
     factory { SaveUserInFireBaseUseCase(get()) }
+    factory { RemoveQuestFromFavouritesUseCase(get()) }
 }

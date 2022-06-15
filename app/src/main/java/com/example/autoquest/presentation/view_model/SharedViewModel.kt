@@ -6,7 +6,6 @@ import com.example.autoquest.domain.models.QuestItem
 import com.example.autoquest.domain.models.QuestTask
 import com.example.autoquest.domain.models.QuestsItemList
 import com.example.autoquest.domain.models.QuestsTasksList
-import com.example.autoquest.domain.usecases.CheckUserRegisterStatusUseCase
 import com.example.autoquest.domain.usecases.FetchItemListFromFbUseCase
 import com.example.autoquest.domain.usecases.FetchTaskListFromFbUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +15,6 @@ import kotlinx.coroutines.launch
 class SharedViewModel(
     private val fetchItemListFromFbUseCase: FetchItemListFromFbUseCase,
     private val fetchTaskListFromFbUseCase: FetchTaskListFromFbUseCase,
-    private val checkUserRegisterStatusUseCase: CheckUserRegisterStatusUseCase
 ) : ViewModel() {
 
     private val _questId = MutableStateFlow(0)
@@ -78,8 +76,5 @@ class SharedViewModel(
     private val _isRegistered = MutableStateFlow(false)
     val isRegistered: MutableStateFlow<Boolean> = _isRegistered
 
-    fun setUserRegisterStatus() {
-        _isRegistered.value = checkUserRegisterStatusUseCase.execute()
-    }
 
 }
