@@ -135,12 +135,9 @@ class QuestDataSourceImpl(
 
     }.flowOn(Dispatchers.IO)
 
-    override fun updateQuestIsFavorite(isFavorite: Boolean) {
-        val routeDocRef = db.collection("questItemList").document("questItem0")
+    override suspend fun updateQuestIsFavorite(isFavorite: Boolean, questId: Int) {
 
-        db.runBatch { batch ->
-            batch.update(routeDocRef, "isFavorite", isFavorite)
-        }
+
     }
 
 }

@@ -5,6 +5,6 @@ import com.example.autoquest.domain.repository.fireBase_repository.UpdateQuestIs
 class UpdateIsFavoriteInFbUseCase(
     private val updateQuestIsFavoriteInFbRepository: UpdateQuestIsFavoriteInFbRepository
 ) {
-    fun execute(isFavorite: Boolean) =
-        updateQuestIsFavoriteInFbRepository.updateQuestIsFavoriteInFb(isFavorite)
+    suspend fun execute(isFavorite: Boolean, questId: Int) =
+        updateQuestIsFavoriteInFbRepository.updateQuestIsFavoriteInFb(isFavorite, questId)
 }

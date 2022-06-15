@@ -98,4 +98,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
     implementation 'com.google.android.gms:play-services-analytics:18.0.1'
 
+    //Easypermissions
+    implementation 'com.vmadalin:easypermissions-ktx:1.0.0'
+
 }

@@ -26,7 +26,9 @@ class ListOfQuestsViewModel(
         }
     }
 
-    fun updateQuestIsFavoriteInFb(isFavorite: Boolean) {
-        updateIsFavoriteInFbUseCase.execute(isFavorite)
+    fun updateQuestIsFavoriteInFb(isFavorite: Boolean, questId: Int) {
+        viewModelScope.launch {
+            updateIsFavoriteInFbUseCase.execute(isFavorite,questId)
+        }
     }
 }

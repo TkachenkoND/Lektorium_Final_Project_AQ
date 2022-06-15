@@ -111,8 +111,8 @@ class ListOfQuestsFragment :
         goToNextFragment(DetailsQuestItemFragment())
     }
 
-    override fun favoritePress(isFavorite: Boolean) {
-        listOfQuestsVm.updateQuestIsFavoriteInFb(isFavorite)
+    override fun favoritePress(isFavorite: Boolean, questId: Int) {
+        listOfQuestsVm.updateQuestIsFavoriteInFb(isFavorite, questId)
         sharedVm.fetchQuestItemListFromFbVm()
     }
 

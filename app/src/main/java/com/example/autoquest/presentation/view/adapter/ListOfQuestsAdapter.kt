@@ -15,7 +15,7 @@ interface ClickOnTheItem {
 }
 
 interface ClickOnTheFavorite {
-    fun favoritePress(isFavorite: Boolean)
+    fun favoritePress(isFavorite: Boolean, questId: Int)
 }
 
 class ListOfQuestsAdapter(
@@ -63,10 +63,10 @@ class ListOfQuestsAdapter(
 
                     if (questItem.isFavorite) {
                         favorites.setBackgroundResource(R.drawable.quest_item_star_img)
-                        clickOnTheFavorite.favoritePress(false)
+                        clickOnTheFavorite.favoritePress(false, questItem.questsId)
                     } else {
                         favorites.setBackgroundResource(R.drawable.quest_item_star_background_img)
-                        clickOnTheFavorite.favoritePress(true)
+                        clickOnTheFavorite.favoritePress(true, questItem.questsId)
                     }
                 }
             }
