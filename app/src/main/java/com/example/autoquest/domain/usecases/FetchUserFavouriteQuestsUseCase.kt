@@ -5,5 +5,5 @@ import com.example.autoquest.domain.repository.fireBase_repository.FetchUserFavo
 class FetchUserFavouriteQuestsUseCase(
     private val fetchUserFavouriteQuestsRepository: FetchUserFavouriteQuestsRepository
 ) {
-    fun execute(userId: Int) = fetchUserFavouriteQuestsRepository.getUserFavouriteQuests(userId)
+    fun execute(userId: String) = fetchUserFavouriteQuestsRepository.getUserFavouriteQuests(userId)
 }

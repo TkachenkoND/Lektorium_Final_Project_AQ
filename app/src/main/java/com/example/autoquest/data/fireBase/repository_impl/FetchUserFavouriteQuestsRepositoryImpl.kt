@@ -7,5 +7,5 @@ class FetchUserFavouriteQuestsRepositoryImpl(
     private val questDataSource: QuestDataSource
 ) : FetchUserFavouriteQuestsRepository {
 
-    override fun getUserFavouriteQuests(userId: Int) = questDataSource.getUserFavouriteQuests(userId)
+    override fun getUserFavouriteQuests(userId: String) = questDataSource.getUserFavouriteQuests(userId)
 }

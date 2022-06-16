@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.autoquest.R
 import com.example.autoquest.databinding.RegisterFragmentBinding
-import com.example.autoquest.domain.models.GoogleUserData
 import com.example.autoquest.presentation.view_model.SharedViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -96,10 +95,14 @@ class RegisterFragment : BaseFragment<RegisterFragmentBinding>(ListOfQuestsFragm
 
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
-            val userData = GoogleUserData(user.displayName, user.photoUrl, user.tenantId)
-            //registerFragmentVm.addUserToFireStoreVm(userData)
 
-            Toast.makeText(requireContext(), "Hello ${user.displayName} !", Toast.LENGTH_SHORT)
+            sharedVm.addUserInFireBase(
+                user.uid,
+                user.displayName!!,
+                user.photoUrl.toString()
+            )
+
+            Toast.makeText(requireContext(), "Реєстрація пройшла успішно", Toast.LENGTH_SHORT)
                 .show()
 
             goToNextFragment(ListOfQuestsFragment())

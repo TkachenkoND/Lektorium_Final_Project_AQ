@@ -6,8 +6,7 @@ import com.example.autoquest.domain.models.QuestItem
 import com.example.autoquest.domain.models.QuestTask
 import com.example.autoquest.domain.models.QuestsItemList
 import com.example.autoquest.domain.models.QuestsTasksList
-import com.example.autoquest.domain.usecases.FetchItemListFromFbUseCase
-import com.example.autoquest.domain.usecases.FetchTaskListFromFbUseCase
+import com.example.autoquest.domain.usecases.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -15,6 +14,10 @@ import kotlinx.coroutines.launch
 class SharedViewModel(
     private val fetchItemListFromFbUseCase: FetchItemListFromFbUseCase,
     private val fetchTaskListFromFbUseCase: FetchTaskListFromFbUseCase,
+    private val fetchUserFavouriteQuestsUseCase: FetchUserFavouriteQuestsUseCase,
+    private val addUserInFireBaseUseCase: SaveUserInFireBaseUseCase,
+    private val checkUserRegisterStatusAndGetIdUseCase: CheckUserRegisterStatusAndGetIdUseCase,
+    private val addQuestToFavouritesUseCase: AddQuestToFavouritesUseCase
 ) : ViewModel() {
 
     private val _questId = MutableStateFlow(0)
@@ -39,6 +42,26 @@ class SharedViewModel(
             fetchItemListFromFbUseCase.execute().collect { questItemList ->
                 _questItemList.value = questItemList
             }
+        }
+    }
+
+    private val _onlyFavoriteQuests = MutableStateFlow(QuestsItemList(emptyList()))
+    val onlyFavoriteQuests: StateFlow<QuestsItemList> = _onlyFavoriteQuests
+
+    fun fetchUserFavouriteQuests(userId: String) {
+        val favoriteQuests = mutableListOf<QuestItem>()
+
+        viewModelScope.launch {
+            fetchUserFavouriteQuestsUseCase.execute(userId).collect { listQuestsId ->
+                _questItemList.value.questItemList.forEach { questItem ->
+                    listQuestsId.forEach { questId ->
+                        if (questItem.questsId == questId.toInt())
+                            favoriteQuests.add(questItem)
+                    }
+                }
+                _onlyFavoriteQuests.value = QuestsItemList(favoriteQuests)
+            }
+
         }
     }
 
@@ -72,9 +95,23 @@ class SharedViewModel(
 
     fun fetchTaskListSize() = _questTaskList.value.questTaskList.size
 
-    //Google signIn
-    private val _isRegistered = MutableStateFlow(false)
-    val isRegistered: MutableStateFlow<Boolean> = _isRegistered
+    fun addQuestToFavourites(userId: String, questId: Int) {
+        addQuestToFavouritesUseCase.execute(userId, questId)
+    }
 
+    //Google signIn
+    private val _userId = MutableStateFlow("")
+    val userId: MutableStateFlow<String> = _userId
+
+    fun addUserInFireBase(userId: String, userName: String, userImg: String) {
+        addUserInFireBaseUseCase.execute(userId, userName, userImg)
+        _userId.value = userId
+    }
+
+    fun checkUserRegisterStatusAndGetId() {
+        val user = checkUserRegisterStatusAndGetIdUseCase.execute()
+        if (user != null)
+            _userId.value = user.userId
+    }
 
 }

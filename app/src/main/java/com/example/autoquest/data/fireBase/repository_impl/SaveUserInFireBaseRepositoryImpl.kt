@@ -7,7 +7,7 @@ class SaveUserInFireBaseRepositoryImpl(
     private val questDataSource: QuestDataSource
 
 ) : SaveUserInFireBaseRepository {
-    override fun saveUserInFb(userId: Int, userName: String, userImg: String) {
+    override fun saveUserInFb(userId: String, userName: String, userImg: String) {
         questDataSource.saveUserInFb(userId,userName,userImg)
     }
 }

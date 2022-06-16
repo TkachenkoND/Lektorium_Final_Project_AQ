@@ -5,7 +5,7 @@ import com.example.autoquest.domain.repository.fireBase_repository.SaveUserInFir
 class SaveUserInFireBaseUseCase(
     private val saveUserInFireBaseRepository: SaveUserInFireBaseRepository
 ) {
-    fun execute(userId: Int, userName: String, userImg: String) {
+    fun execute(userId: String, userName: String, userImg: String) {
         saveUserInFireBaseRepository.saveUserInFb(userId,userName,userImg)
     }
 }

@@ -34,7 +34,6 @@ fun QuestItem.toQuestItemEntity() = QuestItemEntity(
     timeQuest = timeQuest,
     placeStartQuest = placeStartQuest,
     imgDetailsQuest = imgDetailsQuest,
-    isFavorite = isFavorite,
     accessCode = accessCode
 )
 
@@ -48,6 +47,5 @@ fun QuestItemEntity.toQuestItem() = QuestItem(
     timeQuest = timeQuest,
     placeStartQuest = placeStartQuest,
     imgDetailsQuest = imgDetailsQuest,
-    isFavorite = isFavorite,
     accessCode = accessCode
 )

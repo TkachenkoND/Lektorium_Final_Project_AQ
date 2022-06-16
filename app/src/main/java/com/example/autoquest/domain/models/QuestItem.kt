@@ -4,7 +4,6 @@ data class QuestItem(
     val questsId: Int,
     val itemBackgroundImg: String,
     val rating: Int,
-    val isFavorite: Boolean,
     val questDescription: String,
     val dataQuest: String,
     val nameQuest: String,

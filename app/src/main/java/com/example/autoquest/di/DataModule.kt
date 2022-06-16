@@ -5,7 +5,9 @@ import com.example.autoquest.data.database.repository_impl.FetchDataQuestItemFro
 import com.example.autoquest.data.database.repository_impl.InsertQuestItemInDbRepositoryImpl
 import com.example.autoquest.data.database.repository_impl.UpdateQuestItemInDbRepositoryImpl
 import com.example.autoquest.data.fireBase.repository_impl.*
+import com.example.autoquest.data.google_signIn.CheckUserRegisterStatusAndGetIdRepositoryImpl
 import com.example.autoquest.data.locate.repository_impl.LocateRepositoryImpl
+import com.example.autoquest.domain.repository.CheckUserRegisterStatusAndGetIdRepository
 import com.example.autoquest.domain.repository.fireBase_repository.RemoveQuestFromFavouritesRepository
 import com.example.autoquest.domain.repository.database_repository.FetchAllQuestItemFromDbRepository
 import com.example.autoquest.domain.repository.database_repository.FetchDataQuestItemFromDbRepository
@@ -24,7 +26,10 @@ val dataModule = module {
     single<FetchQuestTaskListFromFbRepository> { FetchQuestTaskListFromFbRepositoryImpl(get()) }
     single<FetchQuestItemListFromFbRepository> { FetchQuestItemListFromFbRepositoryImpl(get()) }
     single<AddQuestToFavouritesRepository> { AddQuestToFavouritesRepositoryImpl(get()) }
-    single<RemoveQuestFromFavouritesRepository>{ RemoveQuestFromFavouritesRepositoryImpl(get()) }
+    single<RemoveQuestFromFavouritesRepository> { RemoveQuestFromFavouritesRepositoryImpl(get()) }
     single<LocateRepository> { LocateRepositoryImpl(get()) }
     single<SaveUserInFireBaseRepository> { SaveUserInFireBaseRepositoryImpl(get()) }
+    single<CheckUserRegisterStatusAndGetIdRepository> {
+        CheckUserRegisterStatusAndGetIdRepositoryImpl(get())
+    }
 }

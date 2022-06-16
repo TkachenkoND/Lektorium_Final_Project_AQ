@@ -8,30 +8,31 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.autoquest.databinding.ListOfQuestsFragmentBinding
 import com.example.autoquest.domain.models.QuestItem
-import com.example.autoquest.presentation.view.adapter.ClickOnTheFavorite
+import com.example.autoquest.presentation.view.adapter.ChangeBtnFavorite
+import com.example.autoquest.presentation.view.adapter.ClickOnBtnFavorite
 import com.example.autoquest.presentation.view.adapter.ClickOnTheItem
 import com.example.autoquest.presentation.view.adapter.ListOfQuestsAdapter
 import com.example.autoquest.presentation.view.dialog.ClickExitTheAppDialogBtn
-import com.example.autoquest.presentation.view_model.ListOfQuestsViewModel
 import com.example.autoquest.presentation.view_model.SharedViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-import org.koin.androidx.viewmodel.ext.android.viewModel
-
 class ListOfQuestsFragment :
     BaseFragment<ListOfQuestsFragmentBinding>(null),
     ClickOnTheItem,
-    ClickOnTheFavorite,
-    ClickExitTheAppDialogBtn {
+    ClickExitTheAppDialogBtn,
+    ChangeBtnFavorite,
+    ClickOnBtnFavorite {
+
+    private var localUserId: String? = null
 
     private val listOfQuestsAdapter =
         ListOfQuestsAdapter(
             this@ListOfQuestsFragment as ClickOnTheItem,
-            this@ListOfQuestsFragment as ClickOnTheFavorite
+            this@ListOfQuestsFragment as ChangeBtnFavorite,
+            this@ListOfQuestsFragment as ClickOnBtnFavorite
         )
 
-    private val listOfQuestsVm by viewModel<ListOfQuestsViewModel>()
     private val sharedVm by sharedViewModel<SharedViewModel>()
 
     private var listOfQuests: List<QuestItem>? = null
@@ -55,9 +56,15 @@ class ListOfQuestsFragment :
 
     private fun initRegisteredUser() {
         lifecycleScope.launch {
-            sharedVm.isRegistered.collect {
-                if (it)
+            sharedVm.userId.collect { userId ->
+                if (userId.isNotEmpty()) {
+                    localUserId = userId
                     binding.registerBtn.visibility = View.GONE
+                    binding.btnLayout.visibility = View.VISIBLE
+                } else {
+                    binding.registerBtn.visibility = View.VISIBLE
+                    binding.btnLayout.visibility = View.GONE
+                }
             }
         }
     }
@@ -90,7 +97,14 @@ class ListOfQuestsFragment :
     }
 
     private fun setClickOnBtnOnlyFavorite() {
+        if (localUserId != null)
+            sharedVm.fetchUserFavouriteQuests(localUserId!!)
 
+        lifecycleScope.launch {
+            sharedVm.onlyFavoriteQuests.collect {
+                listOfQuestsAdapter.submitList(it.questItemList)
+            }
+        }
     }
 
     private fun initRvAdapter() {
@@ -105,13 +119,30 @@ class ListOfQuestsFragment :
         goToNextFragment(DetailsQuestItemFragment())
     }
 
-    override fun favoritePress(isFavorite: Boolean, questId: Int) {
-        listOfQuestsVm.addQuestToFavourites(isFavorite, questId)
-        sharedVm.fetchQuestItemListFromFbVm()
-    }
-
     override fun dialogBtnPress() {
         activity?.finish()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        sharedVm.checkUserRegisterStatusAndGetId()
+    }
+
+    override fun changeBackgroundBtnFavorite(questId: Int, callback: (result: Boolean) -> Unit) {
+        lifecycleScope.launch {
+            sharedVm.onlyFavoriteQuests.collect {
+                it.questItemList.forEach { questItem ->
+                    if (questItem.questsId == questId)
+                        callback.invoke(true)
+                    else
+                        callback.invoke(false)
+                }
+            }
+        }
+    }
+
+    override fun clickBtnFavorite(questsId: Int) {
+        sharedVm.addQuestToFavourites(localUserId!!, questsId)
     }
 
 }

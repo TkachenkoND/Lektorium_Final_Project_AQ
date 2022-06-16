@@ -7,7 +7,7 @@ class AddQuestToFavouritesRepositoryImpl(
     private val questDataSource: QuestDataSource
 
 ) : AddQuestToFavouritesRepository {
-    override fun addQuestToFavourites(userId: Int, questId: Int) {
+    override fun addQuestToFavourites(userId: String, questId: Int) {
         questDataSource.addQuestToFavourites(userId, questId)
     }
 }

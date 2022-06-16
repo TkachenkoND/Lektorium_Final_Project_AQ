@@ -40,7 +40,6 @@ class QuestDataSourceImpl(
                     questsId!!.toInt(),
                     itemBackgroundImg!!,
                     rating!!.toInt(),
-                    isFavorite!!,
                     questDescription!!,
                     dataQuest!!,
                     nameQuest!!,
@@ -90,24 +89,24 @@ class QuestDataSourceImpl(
 
     }.flowOn(Dispatchers.IO)
 
-    override fun addQuestToFavourites(userId: Int, questId: Int) {
-        db.collection("favourites").document().set(Favourite(questId, userId))
+    override fun addQuestToFavourites(userId: String, questId: Int) {
+        db.collection("favorite").document().set(Favourite(questId, userId))
     }
 
-    override fun saveUserInFb(userId: Int, userName: String, userImg: String) {
+    override fun saveUserInFb(userId: String, userName: String, userImg: String) {
         db.collection("users").document().set(User(userId, userImg, userName))
     }
 
-    override fun getUserFavouriteQuests(userId: Int) = flow {
+    override fun getUserFavouriteQuests(userId: String) = flow {
         val userFavouriteQuests = Tasks.await(
-            db.collection("favourites")
+            db.collection("favorite")
                 .whereEqualTo("userId", userId)
                 .get()
         )
-        val questsId = mutableListOf<String>()
+        val questsId = mutableListOf<Long>()
 
         userFavouriteQuests.documents.forEach {
-            questsId.add(it.getString("userId")!!)
+            questsId.add(it.getLong("questId")!!)
         }
 
 
@@ -116,7 +115,7 @@ class QuestDataSourceImpl(
 
     override suspend fun removeQuestFromFavourites(questId: String, userId: String) {
         val userFavouriteQuest = Tasks.await(
-            db.collection("favourites")
+            db.collection("favorite")
                 .whereEqualTo("questId", questId)
                 .whereEqualTo("userId", userId)
                 .get()
@@ -124,7 +123,7 @@ class QuestDataSourceImpl(
 
         if (userFavouriteQuest != null) {
             for (fav in userFavouriteQuest) {
-                db.collection("favourites").document(fav.id).delete()
+                db.collection("favorites").document(fav.id).delete()
                     .addOnSuccessListener {
                         Log.e("Fav deleted", " successful")
                     }

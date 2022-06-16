@@ -14,13 +14,18 @@ interface ClickOnTheItem {
     fun itemPress(questItem: QuestItem)
 }
 
-interface ClickOnTheFavorite {
-    fun favoritePress(isFavorite: Boolean, questId: Int)
+interface ChangeBtnFavorite {
+    fun changeBackgroundBtnFavorite(questId: Int, callback: (result: Boolean) -> Unit)
+}
+
+interface ClickOnBtnFavorite {
+    fun clickBtnFavorite(questsId: Int)
 }
 
 class ListOfQuestsAdapter(
     val clickOnTheItem: ClickOnTheItem,
-    val clickOnTheFavorite: ClickOnTheFavorite
+    val changeBtnFavorite: ChangeBtnFavorite,
+    val clickOnBtnFavorite: ClickOnBtnFavorite
 ) :
     ListAdapter<QuestItem, ListOfQuestsAdapter.ItemViewHolder>(DiffCallback()) {
 
@@ -44,11 +49,16 @@ class ListOfQuestsAdapter(
                 dataQuest.text = questItem.dataQuest
                 nameQuest.text = questItem.nameQuest
 
-                if (questItem.isFavorite)
-                    favorites.setBackgroundResource(R.drawable.quest_item_star_background_img)
-                else
-                    favorites.setBackgroundResource(R.drawable.quest_item_star_img)
+                changeBtnFavorite.changeBackgroundBtnFavorite(questItem.questsId) { result ->
+                    if (result)
+                        favorites.setBackgroundResource(R.drawable.quest_item_star_background_img)
+                    else
+                        favorites.setBackgroundResource(R.drawable.quest_item_star_img)
+                }
 
+                favorites.setOnClickListener {
+                    clickOnBtnFavorite.clickBtnFavorite(questItem.questsId)
+                }
 
                 Glide.with(itemBackgroundImg.context)
                     .load(questItem.itemBackgroundImg)
@@ -59,16 +69,6 @@ class ListOfQuestsAdapter(
                     clickOnTheItem.itemPress(questItem)
                 }
 
-                favorites.setOnClickListener {
-
-                    if (questItem.isFavorite) {
-                        favorites.setBackgroundResource(R.drawable.quest_item_star_img)
-                        clickOnTheFavorite.favoritePress(false, questItem.questsId)
-                    } else {
-                        favorites.setBackgroundResource(R.drawable.quest_item_star_background_img)
-                        clickOnTheFavorite.favoritePress(true, questItem.questsId)
-                    }
-                }
             }
         }
     }
