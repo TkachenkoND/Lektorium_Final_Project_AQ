@@ -1,11 +1,9 @@
 package com.example.autoquest.presentation.view_model
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import com.example.autoquest.domain.models.QuestItem
-import com.example.autoquest.domain.models.QuestTask
-import com.example.autoquest.domain.models.QuestsItemList
-import com.example.autoquest.domain.models.QuestsTasksList
+import com.example.autoquest.domain.models.*
 import com.example.autoquest.domain.usecases.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +15,8 @@ class SharedViewModel(
     private val fetchUserFavouriteQuestsUseCase: FetchUserFavouriteQuestsUseCase,
     private val addUserInFireBaseUseCase: SaveUserInFireBaseUseCase,
     private val checkUserRegisterStatusAndGetIdUseCase: CheckUserRegisterStatusAndGetIdUseCase,
-    private val addQuestToFavouritesUseCase: AddQuestToFavouritesUseCase
+    private val addQuestToFavouritesUseCase: AddQuestToFavouritesUseCase,
+    private val userSignOutUseCase: UserSignOutUseCase
 ) : ViewModel() {
 
     private val _questId = MutableStateFlow(0)
@@ -99,19 +98,34 @@ class SharedViewModel(
         addQuestToFavouritesUseCase.execute(userId, questId)
     }
 
-    //Google signIn
-    private val _userId = MutableStateFlow("")
-    val userId: MutableStateFlow<String> = _userId
+    //Google sign
+    private val _user = MutableStateFlow<User?>(null)
+    val user: MutableStateFlow<User?> = _user
 
     fun addUserInFireBase(userId: String, userName: String, userImg: String) {
         addUserInFireBaseUseCase.execute(userId, userName, userImg)
-        _userId.value = userId
+
+        _user.value = User(userId, userName, userImg)
     }
 
     fun checkUserRegisterStatusAndGetId() {
         val user = checkUserRegisterStatusAndGetIdUseCase.execute()
         if (user != null)
-            _userId.value = user.userId
+            _user.value = user
+    }
+
+    fun userSignOut() {
+        userSignOutUseCase.execute()
+    }
+
+    fun changeBackgroundBtnFavoriteVm(questId: Int, callback: (result: Boolean) -> Unit) {
+        _onlyFavoriteQuests.value.questItemList.forEach { questItem ->
+            if (questItem.questsId == questId)
+                callback.invoke(true)
+            else
+                callback.invoke(false)
+        }
+
     }
 
 }

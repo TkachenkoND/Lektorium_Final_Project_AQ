@@ -11,5 +11,4 @@ interface QuestDataSource {
     fun addQuestToFavourites(userId: String, questId: Int)
     fun saveUserInFb(userId: String, userName: String, userImg: String)
     fun getUserFavouriteQuests(userId: String):  Flow<MutableList<Long>>
-    suspend fun removeQuestFromFavourites(questId: String, userId: String)
 }

@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.example.autoquest.R
 import com.example.autoquest.databinding.ListOfQuestsFragmentBinding
 import com.example.autoquest.domain.models.QuestItem
 import com.example.autoquest.presentation.view.adapter.ChangeBtnFavorite
@@ -56,9 +58,17 @@ class ListOfQuestsFragment :
 
     private fun initRegisteredUser() {
         lifecycleScope.launch {
-            sharedVm.userId.collect { userId ->
-                if (userId.isNotEmpty()) {
-                    localUserId = userId
+            sharedVm.user.collect { user ->
+                if (user != null) {
+                    localUserId = user.userId
+
+                    Glide.with(binding.userImg.context)
+                        .load(user.userImg)
+                        .error(R.drawable.ic_no_user_img)
+                        .circleCrop()
+                        .into(binding.userImg)
+
+                    binding.userImg.visibility = View.VISIBLE
                     binding.registerBtn.visibility = View.GONE
                     binding.btnLayout.visibility = View.VISIBLE
                 } else {
@@ -93,12 +103,15 @@ class ListOfQuestsFragment :
             registerBtn.setOnClickListener {
                 goToNextFragment(RegisterFragment())
             }
+
+            userImg.setOnClickListener {
+                goToNextFragment(UserProfileFragment())
+            }
         }
     }
 
     private fun setClickOnBtnOnlyFavorite() {
-        if (localUserId != null)
-            sharedVm.fetchUserFavouriteQuests(localUserId!!)
+        sharedVm.fetchUserFavouriteQuests(localUserId!!)
 
         lifecycleScope.launch {
             sharedVm.onlyFavoriteQuests.collect {
@@ -129,16 +142,7 @@ class ListOfQuestsFragment :
     }
 
     override fun changeBackgroundBtnFavorite(questId: Int, callback: (result: Boolean) -> Unit) {
-        lifecycleScope.launch {
-            sharedVm.onlyFavoriteQuests.collect {
-                it.questItemList.forEach { questItem ->
-                    if (questItem.questsId == questId)
-                        callback.invoke(true)
-                    else
-                        callback.invoke(false)
-                }
-            }
-        }
+        sharedVm.changeBackgroundBtnFavoriteVm(questId, callback)
     }
 
     override fun clickBtnFavorite(questsId: Int) {

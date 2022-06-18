@@ -1,6 +1,5 @@
 package com.example.autoquest.data.fireBase.data_source_impl
 
-import android.util.Log
 import com.example.autoquest.data.fireBase.data_source.QuestDataSource
 import com.example.autoquest.domain.models.*
 import com.google.android.gms.tasks.Tasks
@@ -68,7 +67,6 @@ class QuestDataSourceImpl(
             val questsId = it.getLong("questsId")
             val textTask = it.getString("textTask")
             val answerTask = it.getString("answerTask")
-            val accessCode = it.getString("accessCode")
             val latitude = it.getDouble("latitude")
             val longitude = it.getDouble("longitude")
             val questTaskImg = it.getString("questTaskImg")
@@ -90,11 +88,29 @@ class QuestDataSourceImpl(
     }.flowOn(Dispatchers.IO)
 
     override fun addQuestToFavourites(userId: String, questId: Int) {
-        db.collection("favorite").document().set(Favourite(questId, userId))
+
+        db.collection("favorite")
+            .whereEqualTo("questId", questId)
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener { userFavouriteList ->
+                if (userFavouriteList.size() > 0) {
+                    userFavouriteList.forEach {
+                        db.collection("favorite").document(it.id).delete()
+                    }
+                } else
+                    db.collection("favorite").document().set(Favourite(questId, userId))
+            }
     }
 
     override fun saveUserInFb(userId: String, userName: String, userImg: String) {
-        db.collection("users").document().set(User(userId, userImg, userName))
+        db.collection("users")
+            .whereEqualTo("userId", userId)
+            .get()
+            .addOnSuccessListener { users ->
+                if (users.size() == 0)
+                    db.collection("users").document().set(User(userId, userImg, userName))
+            }
     }
 
     override fun getUserFavouriteQuests(userId: String) = flow {
@@ -112,26 +128,5 @@ class QuestDataSourceImpl(
 
         emit(questsId)
     }.flowOn(Dispatchers.IO)
-
-    override suspend fun removeQuestFromFavourites(questId: String, userId: String) {
-        val userFavouriteQuest = Tasks.await(
-            db.collection("favorite")
-                .whereEqualTo("questId", questId)
-                .whereEqualTo("userId", userId)
-                .get()
-        )
-
-        if (userFavouriteQuest != null) {
-            for (fav in userFavouriteQuest) {
-                db.collection("favorites").document(fav.id).delete()
-                    .addOnSuccessListener {
-                        Log.e("Fav deleted", " successful")
-                    }
-                    .addOnFailureListener {
-                        Log.e("Fav deleted", " $it")
-                    }
-            }
-        }
-    }
 
 }

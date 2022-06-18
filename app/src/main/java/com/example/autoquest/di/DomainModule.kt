@@ -10,6 +10,6 @@ val domainModule = module {
     factory { AddQuestToFavouritesUseCase(get()) }
     factory { LocateUseCase(get()) }
     factory { SaveUserInFireBaseUseCase(get()) }
-    factory { RemoveQuestFromFavouritesUseCase(get()) }
     factory { CheckUserRegisterStatusAndGetIdUseCase(get()) }
+    factory { UserSignOutUseCase(get()) }
 }

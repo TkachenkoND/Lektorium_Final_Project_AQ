@@ -1,4 +1,4 @@
-package com.example.autoquest.domain.repository
+package com.example.autoquest.domain.repository.google_sign
 
 import com.example.autoquest.domain.models.User
 

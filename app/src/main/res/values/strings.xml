@@ -31,4 +31,8 @@
     <string name="btn_chek_txt">Перевірити</string>
     <string name="title_exit_dialog">Вихід</string>
     <string name="messege_exit_dialog">Ви дійсно хочете вийти ?</string>
+    <string name="signout">signOut</string>
+    <string name="username">UserName</string>
+    <string name="messege_dialog_signout">Ви дісно хочете вийти ?</string>
+    <string name="text_permission">Ця програма не може працювати без дозволу на місцезнаходження.</string>
 </resources>

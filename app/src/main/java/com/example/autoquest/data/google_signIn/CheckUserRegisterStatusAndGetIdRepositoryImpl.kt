@@ -1,7 +1,7 @@
 package com.example.autoquest.data.google_signIn
 
 import com.example.autoquest.domain.models.User
-import com.example.autoquest.domain.repository.CheckUserRegisterStatusAndGetIdRepository
+import com.example.autoquest.domain.repository.google_sign.CheckUserRegisterStatusAndGetIdRepository
 import com.google.firebase.auth.FirebaseAuth
 
 class CheckUserRegisterStatusAndGetIdRepositoryImpl(
