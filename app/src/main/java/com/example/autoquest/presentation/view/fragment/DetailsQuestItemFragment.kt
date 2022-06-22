@@ -34,17 +34,17 @@ class DetailsQuestItemFragment :
     }
 
     private fun initRegisteredUser() {
-        //lifecycleScope.launch {
-            //sharedVm.isRegistered.collect {
-               // if (it) {
+        lifecycleScope.launch {
+            sharedVm.user.collect { user ->
+                if (user != null) {
                     binding.universalBtn.text = getString(R.string.participate_btn_txt)
                     setClickBtnListener(true)
-               // } else {
-                   // binding.universalBtn.text = getString(R.string.registerTxtBtn)
-                   // setClickBtnListener(it)
-               // }
-           // }
-       // }
+                } else {
+                    binding.universalBtn.text = getString(R.string.registerTxtBtn)
+                    setClickBtnListener(false)
+                }
+            }
+        }
     }
 
     private fun initObserveQuestId() {
@@ -80,11 +80,9 @@ class DetailsQuestItemFragment :
         }
     }
 
-
     private fun setClickBtnListener(isRegistered: Boolean) {
         binding.universalBtn.setOnClickListener {
             if (isRegistered) {
-                sharedVm.setQuestTaskId(0)
                 ConfirmationDialog(this as ClickDialogBtn)
                     .show(
                         childFragmentManager,
@@ -96,7 +94,6 @@ class DetailsQuestItemFragment :
     }
 
     override fun dialogBtnPress() {
-        //add quest id in list
         goToNextFragment(TimeToQuestFragment())
     }
 

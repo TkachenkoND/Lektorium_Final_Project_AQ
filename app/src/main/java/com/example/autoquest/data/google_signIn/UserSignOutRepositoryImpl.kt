@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 class UserSignOutRepositoryImpl(
     private val auth: FirebaseAuth
 ) : UserSignOutRepository {
+
     override fun userSignOut() {
         auth.signOut()
     }

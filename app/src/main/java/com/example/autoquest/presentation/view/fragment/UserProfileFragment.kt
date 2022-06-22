@@ -47,6 +47,8 @@ class UserProfileFragment : BaseFragment<UserProfileFragmentBinding>(ListOfQuest
                 .error(R.drawable.ic_no_user_img)
                 .circleCrop()
                 .into(detailsImage)
+
+            detailsUserName.text = userData.userName
         }
 
         setBtnListener()
@@ -57,7 +59,7 @@ class UserProfileFragment : BaseFragment<UserProfileFragmentBinding>(ListOfQuest
             btnBack.setOnClickListener { goToNextFragment(ListOfQuestsFragment()) }
 
             signOut.setOnClickListener {
-                SignOutDialog(this as ClickSignOutDialogBtn)
+                SignOutDialog(this@UserProfileFragment as ClickSignOutDialogBtn)
                     .show(
                         childFragmentManager,
                         SignOutDialog.TAG
@@ -68,6 +70,8 @@ class UserProfileFragment : BaseFragment<UserProfileFragmentBinding>(ListOfQuest
 
     override fun dialogBtnPress() {
         sharedVm.userSignOut()
+        sharedVm.checkUserRegisterStatusAndGetId()
+
         goToNextFragment(ListOfQuestsFragment())
     }
 

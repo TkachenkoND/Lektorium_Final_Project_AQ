@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.autoquest.R
 import com.example.autoquest.databinding.ListOfQuestsFragmentBinding
 import com.example.autoquest.domain.models.QuestItem
-import com.example.autoquest.presentation.view.adapter.ChangeBtnFavorite
 import com.example.autoquest.presentation.view.adapter.ClickOnBtnFavorite
 import com.example.autoquest.presentation.view.adapter.ClickOnTheItem
 import com.example.autoquest.presentation.view.adapter.ListOfQuestsAdapter
@@ -23,7 +23,6 @@ class ListOfQuestsFragment :
     BaseFragment<ListOfQuestsFragmentBinding>(null),
     ClickOnTheItem,
     ClickExitTheAppDialogBtn,
-    ChangeBtnFavorite,
     ClickOnBtnFavorite {
 
     private var localUserId: String? = null
@@ -31,8 +30,7 @@ class ListOfQuestsFragment :
     private val listOfQuestsAdapter =
         ListOfQuestsAdapter(
             this@ListOfQuestsFragment as ClickOnTheItem,
-            this@ListOfQuestsFragment as ChangeBtnFavorite,
-            this@ListOfQuestsFragment as ClickOnBtnFavorite
+            this@ListOfQuestsFragment as ClickOnBtnFavorite,
         )
 
     private val sharedVm by sharedViewModel<SharedViewModel>()
@@ -47,8 +45,9 @@ class ListOfQuestsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sharedVm.fetchQuestTaskListFromFbVm()
+        sharedVm.checkUserRegisterStatusAndGetId()
         sharedVm.fetchQuestItemListFromFbVm()
+
 
         initRegisteredUser()
         initRvAdapter()
@@ -60,6 +59,8 @@ class ListOfQuestsFragment :
         lifecycleScope.launch {
             sharedVm.user.collect { user ->
                 if (user != null) {
+                    sharedVm.fetchUserFavoriteQuests(user.userId)
+
                     localUserId = user.userId
 
                     Glide.with(binding.userImg.context)
@@ -74,6 +75,7 @@ class ListOfQuestsFragment :
                 } else {
                     binding.registerBtn.visibility = View.VISIBLE
                     binding.btnLayout.visibility = View.GONE
+                    binding.userImg.visibility = View.GONE
                 }
             }
         }
@@ -111,7 +113,7 @@ class ListOfQuestsFragment :
     }
 
     private fun setClickOnBtnOnlyFavorite() {
-        sharedVm.fetchUserFavouriteQuests(localUserId!!)
+        sharedVm.fetchUserFavoriteQuests(localUserId!!)
 
         lifecycleScope.launch {
             sharedVm.onlyFavoriteQuests.collect {
@@ -129,6 +131,8 @@ class ListOfQuestsFragment :
 
     override fun itemPress(questItem: QuestItem) {
         sharedVm.setQuestId(questItem.questsId)
+        sharedVm.fetchTaskListByQuestIdFromFbVm(questItem.questsId)
+
         goToNextFragment(DetailsQuestItemFragment())
     }
 
@@ -136,17 +140,14 @@ class ListOfQuestsFragment :
         activity?.finish()
     }
 
-    override fun onStart() {
-        super.onStart()
-        sharedVm.checkUserRegisterStatusAndGetId()
-    }
-
-    override fun changeBackgroundBtnFavorite(questId: Int, callback: (result: Boolean) -> Unit) {
-        sharedVm.changeBackgroundBtnFavoriteVm(questId, callback)
-    }
-
-    override fun clickBtnFavorite(questsId: Int) {
-        sharedVm.addQuestToFavourites(localUserId!!, questsId)
+    override fun clickBtnFavorite(questsId: Int, changeCallback: (result: Boolean) -> Unit) {
+        if (localUserId != null) {
+            sharedVm.addQuestToFavourites(localUserId!!, questsId) { isFavorite ->
+                changeCallback.invoke(isFavorite)
+            }
+        } else
+            Toast.makeText(requireContext(), "Спочанку пройдіть реєстрацію", Toast.LENGTH_SHORT)
+                .show()
     }
 
 }

@@ -84,6 +84,8 @@ class LocateRepositoryImpl(
                 .title("Marker in Locate")
         )
         mMap.moveCamera(CameraUpdateFactory.newLatLng(locate))
+        mMap.setMinZoomPreference(12f)
+
     }
 
 }

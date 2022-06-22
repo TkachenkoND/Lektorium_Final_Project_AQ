@@ -1,7 +1,6 @@
 package com.example.autoquest.presentation.view_model
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.example.autoquest.domain.models.*
 import com.example.autoquest.domain.usecases.*
@@ -16,7 +15,8 @@ class SharedViewModel(
     private val addUserInFireBaseUseCase: SaveUserInFireBaseUseCase,
     private val checkUserRegisterStatusAndGetIdUseCase: CheckUserRegisterStatusAndGetIdUseCase,
     private val addQuestToFavouritesUseCase: AddQuestToFavouritesUseCase,
-    private val userSignOutUseCase: UserSignOutUseCase
+    private val userSignOutUseCase: UserSignOutUseCase,
+    //private val addQuestToListOfTraveledUseCase: AddQuestToListOfTraveledUseCase
 ) : ViewModel() {
 
     private val _questId = MutableStateFlow(0)
@@ -26,11 +26,11 @@ class SharedViewModel(
         _questId.value = questId
     }
 
-    private val _questTaskId = MutableStateFlow(0)
-    val questTaskId: MutableStateFlow<Int> = _questTaskId
+    private val _taskId = MutableStateFlow(0)
+    val taskId: MutableStateFlow<Int> = _taskId
 
-    fun setQuestTaskId(questTaskId: Int) {
-        _questTaskId.value = questTaskId
+    fun setQuestTaskId(taskId: Int) {
+        _taskId.value = taskId
     }
 
     private val _questItemList = MutableStateFlow(QuestsItemList(emptyList()))
@@ -47,7 +47,7 @@ class SharedViewModel(
     private val _onlyFavoriteQuests = MutableStateFlow(QuestsItemList(emptyList()))
     val onlyFavoriteQuests: StateFlow<QuestsItemList> = _onlyFavoriteQuests
 
-    fun fetchUserFavouriteQuests(userId: String) {
+    fun fetchUserFavoriteQuests(userId: String) {
         val favoriteQuests = mutableListOf<QuestItem>()
 
         viewModelScope.launch {
@@ -73,29 +73,46 @@ class SharedViewModel(
     }
 
     private val _questTaskList = MutableStateFlow(QuestsTasksList(emptyList()))
-    val questTaskList: StateFlow<QuestsTasksList> = _questTaskList
 
-    fun fetchQuestTaskListFromFbVm() {
+    fun fetchTaskListByQuestIdFromFbVm(questId: Int) {
+        val taskListByQuestId = mutableListOf<QuestTask>()
+
         viewModelScope.launch {
             fetchTaskListFromFbUseCase.execute().collect { questTaskList ->
+                questTaskList.questTaskList.forEach { task ->
+                    if (task.questsId == questId)
+                        taskListByQuestId.add(task)
+                }
                 _questTaskList.value = questTaskList
             }
         }
     }
 
-    fun fetchQuestTaskFromFbVm(id: Int): QuestTask? {
-
+    fun fetchTaskByIdVm(id: Int): QuestTask? {
         _questTaskList.value.questTaskList.forEach { questTask ->
-            if (questTask.questsId == id)
+            if (questTask.taskId == id)
                 return questTask
         }
         return null
     }
 
-    fun fetchTaskListSize() = _questTaskList.value.questTaskList.size
+    fun fetchTaskListSizeByQuestId(questsId: Int): Int {
+        var count = 0
 
-    fun addQuestToFavourites(userId: String, questId: Int) {
-        addQuestToFavouritesUseCase.execute(userId, questId)
+        _questTaskList.value.questTaskList.forEach {
+            if (it.questsId == questsId)
+                count++
+        }
+
+        return count
+    }
+
+    fun addQuestToFavourites(
+        userId: String,
+        questId: Int,
+        changeCallback: (result: Boolean) -> Unit
+    ) {
+        addQuestToFavouritesUseCase.execute(userId, questId, changeCallback)
     }
 
     //Google sign
@@ -112,19 +129,19 @@ class SharedViewModel(
         val user = checkUserRegisterStatusAndGetIdUseCase.execute()
         if (user != null)
             _user.value = user
+        else
+            _user.value = null
     }
 
     fun userSignOut() {
         userSignOutUseCase.execute()
     }
 
-    fun changeBackgroundBtnFavoriteVm(questId: Int, callback: (result: Boolean) -> Unit) {
-        _onlyFavoriteQuests.value.questItemList.forEach { questItem ->
-            if (questItem.questsId == questId)
-                callback.invoke(true)
-            else
-                callback.invoke(false)
-        }
+    /* fun addQuestToListOfTraveledByUserId(questsId: Int) {
+         addQuestToListOfTraveledUseCase.execute(questsId)
+     }*/
+
+    fun fetchListOfTraveledByUserId(userId: String) {
 
     }
 

@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.autoquest.databinding.QuestFragmentBinding
 import com.example.autoquest.domain.models.QuestItem
@@ -70,7 +71,7 @@ class TimeToQuestFragment : BaseFragment<QuestFragmentBinding>(DetailsQuestItemF
                 try {
                     binding.timeQuest.text =
                         "$elapsedDays днів $elapsedHours:$elapsedMinutes:$elapsedSeconds"
-                } catch (e: Exception){
+                } catch (e: Exception) {
                     this.cancel()
                 }
 
@@ -89,10 +90,13 @@ class TimeToQuestFragment : BaseFragment<QuestFragmentBinding>(DetailsQuestItemF
             questCodeLayout.visibility = View.VISIBLE
 
             btnConfirm.setOnClickListener {
-                if (questCodeEdit.text.toString() == questItem.accessCode)
+                if (questCodeEdit.text.toString() == questItem.accessCode) {
+
+                    //sharedVm.addQuestToListOfTraveled(questItem.questsId)
+
                     goToNextFragment(QuestTaskAndLocationFragment())
-                else {
-                    //toast
+                } else {
+                    Toast.makeText(requireContext(), "Невірний код(", Toast.LENGTH_SHORT).show()
                 }
             }
         }

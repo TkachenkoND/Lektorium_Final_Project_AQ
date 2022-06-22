@@ -8,7 +8,7 @@ interface QuestDataSource {
 
     fun fetchQuestItemList(): Flow<QuestsItemList>
     fun fetchQuestTaskList(): Flow<QuestsTasksList>
-    fun addQuestToFavourites(userId: String, questId: Int)
+    fun addQuestToFavourites(userId: String, questId: Int, changeCallback: (result: Boolean) -> Unit)
     fun saveUserInFb(userId: String, userName: String, userImg: String)
     fun getUserFavouriteQuests(userId: String):  Flow<MutableList<Long>>
 }

@@ -26,7 +26,8 @@ class QuestTaskAndLocationFragment :
     private val questTaskAndLocationVm by viewModel<QuestTaskAndLocationViewModel>()
 
     private var questTaskId = 0
-    private var questTask: QuestTask? = null
+    private var questId = 0
+    private var taskByQuestId: QuestTask? = null
     private var questTaskListSize = 0
 
     private var mapFragment: SupportMapFragment? = null
@@ -39,8 +40,7 @@ class QuestTaskAndLocationFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        questTaskListSize = sharedVm.fetchTaskListSize()
-
+        initObserveQuestId()
         initMapFragment()
         initQuestTaskId()
     }
@@ -51,14 +51,24 @@ class QuestTaskAndLocationFragment :
         ) as SupportMapFragment
     }
 
+    private fun initObserveQuestId() {
+        lifecycleScope.launch {
+            sharedVm.questId.collect { id ->
+                questId = id
+                questTaskListSize = sharedVm.fetchTaskListSizeByQuestId(id)
+                sharedVm.setQuestTaskId(0)
+            }
+        }
+    }
+
     private fun initQuestTaskId() {
         lifecycleScope.launch {
-            sharedVm.questTaskId.collect { id ->
-                questTask = sharedVm.fetchQuestTaskFromFbVm(id)
+            sharedVm.taskId.collect { id ->
+                taskByQuestId = sharedVm.fetchTaskByIdVm(id)
                 questTaskId = id
 
-                if (questTask != null){
-                    initLocationListener(questTask!!)
+                if (taskByQuestId != null) {
+                    initLocationListener(taskByQuestId!!)
                 }
             }
         }
@@ -115,12 +125,11 @@ class QuestTaskAndLocationFragment :
     private fun goToNextTask() {
         val nextQuestTaskId = questTaskId + 1
 
-        if (nextQuestTaskId < questTaskListSize){
+        if (nextQuestTaskId < questTaskListSize) {
             sharedVm.setQuestTaskId(nextQuestTaskId)
             binding.questTaskFragment.visibility = View.GONE
             binding.mapLayout.visibility = View.VISIBLE
-        }
-        else {
+        } else {
             // go to final fragment
         }
     }

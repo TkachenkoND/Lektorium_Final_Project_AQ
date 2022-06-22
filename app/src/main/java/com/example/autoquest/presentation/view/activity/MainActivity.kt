@@ -3,6 +3,8 @@ package com.example.autoquest.presentation.view.activity
 import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ViewGroup
+import android.widget.Button
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.commit
 import com.example.autoquest.R

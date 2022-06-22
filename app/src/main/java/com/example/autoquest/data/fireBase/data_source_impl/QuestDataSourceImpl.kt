@@ -70,6 +70,7 @@ class QuestDataSourceImpl(
             val latitude = it.getDouble("latitude")
             val longitude = it.getDouble("longitude")
             val questTaskImg = it.getString("questTaskImg")
+            val taskId = it.getLong("taskId")
 
             questTaskList.add(
                 QuestTask(
@@ -78,7 +79,8 @@ class QuestDataSourceImpl(
                     answerTask = answerTask!!,
                     latitude = latitude!!,
                     longitude = longitude!!,
-                    questTaskImg = questTaskImg!!
+                    questTaskImg = questTaskImg!!,
+                    taskId = taskId!!.toInt()
                 )
             )
         }
@@ -87,7 +89,7 @@ class QuestDataSourceImpl(
 
     }.flowOn(Dispatchers.IO)
 
-    override fun addQuestToFavourites(userId: String, questId: Int) {
+    override fun addQuestToFavourites(userId: String, questId: Int, changeCallback: (result: Boolean) -> Unit) {
 
         db.collection("favorite")
             .whereEqualTo("questId", questId)
@@ -97,9 +99,12 @@ class QuestDataSourceImpl(
                 if (userFavouriteList.size() > 0) {
                     userFavouriteList.forEach {
                         db.collection("favorite").document(it.id).delete()
+                        changeCallback.invoke(false)
                     }
-                } else
+                } else{
+                    changeCallback.invoke(true)
                     db.collection("favorite").document().set(Favourite(questId, userId))
+                }
             }
     }
 

@@ -1,5 +1,5 @@
 package com.example.autoquest.domain.repository.fireBase_repository
 
 interface AddQuestToFavouritesRepository {
-    fun addQuestToFavourites(userId: String, questId: Int)
+    fun addQuestToFavourites(userId: String, questId: Int, changeCallback: (result: Boolean) -> Unit)
 }
