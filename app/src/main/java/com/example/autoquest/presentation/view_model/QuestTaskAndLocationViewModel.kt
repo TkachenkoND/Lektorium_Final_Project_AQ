@@ -7,7 +7,7 @@ import com.google.android.gms.maps.SupportMapFragment
 class QuestTaskAndLocationViewModel(
     private val locateUseCase: LocateUseCase
 ) : ViewModel() {
-    //Locate
+
     fun getLocate(
         latitude: Double,
         longitude: Double,

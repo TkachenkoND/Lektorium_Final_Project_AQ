@@ -17,6 +17,8 @@ class SharedViewModel(
     private val addQuestToFavouritesUseCase: AddQuestToFavouritesUseCase,
     private val userSignOutUseCase: UserSignOutUseCase,
     //private val addQuestToListOfTraveledUseCase: AddQuestToListOfTraveledUseCase
+    private val addPointsToUserUseCase: AddPointsToUserUseCase,
+    //private val fetchUsersResultUseCase: FetchUsersResultUseCase
 ) : ViewModel() {
 
     private val _questId = MutableStateFlow(0)
@@ -144,5 +146,23 @@ class SharedViewModel(
     fun fetchListOfTraveledByUserId(userId: String) {
 
     }
+
+    fun addPointsToUser(userPoint: Float, questId: Int) {
+        val userId = _user.value!!.userId
+        addPointsToUserUseCase.execute(userId, userPoint, questId)
+    }
+
+    private val _resultList = MutableStateFlow(listOf<UserResultModel>())
+    val resultList: StateFlow<List<UserResultModel>> = _resultList
+
+   /* fun fetchUsersResult() {
+        viewModelScope.launch {
+            fetchUsersResultUseCase.execute().collect { usersResult ->
+                _resultList.value = usersResult
+            }
+
+        }
+    }*/
+
 
 }

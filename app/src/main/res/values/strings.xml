@@ -35,4 +35,6 @@
     <string name="username">UserName</string>
     <string name="messege_dialog_signout">Ви дісно хочете вийти ?</string>
     <string name="text_permission">Ця програма не може працювати без дозволу на місцезнаходження.</string>
+    <string name="user_frag_txt">Квести в яких ви приймали участь:</string>
+    <string name="result_quest_txt">Результати квесту</string>
 </resources>

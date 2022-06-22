@@ -33,4 +33,5 @@ val dataModule = module {
         CheckUserRegisterStatusAndGetIdRepositoryImpl(get())
     }
     single<UserSignOutRepository> { UserSignOutRepositoryImpl(get()) }
+    single<AddPointsToUserRepository> { AddPointsToUserRepositoryImpl(get()) }
 }

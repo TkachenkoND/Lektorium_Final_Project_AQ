@@ -12,4 +12,5 @@ val domainModule = module {
     factory { SaveUserInFireBaseUseCase(get()) }
     factory { CheckUserRegisterStatusAndGetIdUseCase(get()) }
     factory { UserSignOutUseCase(get()) }
+    factory { AddPointsToUserUseCase(get()) }
 }

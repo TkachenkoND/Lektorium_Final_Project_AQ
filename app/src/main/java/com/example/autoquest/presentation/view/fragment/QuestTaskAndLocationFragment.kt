@@ -1,6 +1,7 @@
 package com.example.autoquest.presentation.view.fragment
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,7 @@ class QuestTaskAndLocationFragment :
     private var questId = 0
     private var taskByQuestId: QuestTask? = null
     private var questTaskListSize = 0
+    private var userPoint = 0f
 
     private var mapFragment: SupportMapFragment? = null
 
@@ -93,6 +95,8 @@ class QuestTaskAndLocationFragment :
     }
 
     private fun initQuestTaskUi(questTask: QuestTask) {
+        val timer = initTaskTimer()
+
         binding.apply {
             binding.questTaskFragment.visibility = View.VISIBLE
             binding.mapLayout.visibility = View.GONE
@@ -112,7 +116,8 @@ class QuestTaskAndLocationFragment :
                 val userAnswer = editUserAnswer.text.toString()
 
                 if (userAnswer == questTask.answerTask) {
-                    //addPointsToUser()
+                    timer.onFinish()
+                    timer.cancel()
                     goToNextTask()
                 } else {
                     showToast("Відповідь не правильна(")
@@ -130,12 +135,46 @@ class QuestTaskAndLocationFragment :
             binding.questTaskFragment.visibility = View.GONE
             binding.mapLayout.visibility = View.VISIBLE
         } else {
-            // go to final fragment
+            sharedVm.addPointsToUser(userPoint,questId)
+            goToNextFragment(ResultOfTheQuestFragment())
         }
     }
 
     private fun showToast(toastTxt: String) {
         Toast.makeText(context, toastTxt, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun initTaskTimer() = object : CountDownTimer(900000, 1000) {
+
+        var minutes = 0L
+        var seconds = 0L
+
+        override fun onTick(millisUntilFinished: Long) {
+            var diff = millisUntilFinished
+            val secondsInMilli: Long = 1000
+            val minutesInMilli = secondsInMilli * 60
+
+            minutes = diff / minutesInMilli
+            diff %= minutesInMilli
+
+            seconds = diff / secondsInMilli
+
+            try {
+                binding.taskTime.text = "$minutes:$seconds"
+            } catch (e: Exception) {
+                this.cancel()
+            }
+
+        }
+
+        override fun onFinish() {
+            countUserPoint(minutes,seconds)
+        }
+
+    }.start()
+
+    private fun countUserPoint(min: Long, sec: Long) {
+        userPoint += 10 - (900 - (min * 60 + sec) ) * 0.1f
     }
 
     override fun dialogBtnPress() {

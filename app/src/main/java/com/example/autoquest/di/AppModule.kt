@@ -7,5 +7,5 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { QuestTaskAndLocationViewModel(get()) }
-    viewModel { SharedViewModel(get(), get(), get(), get(), get(), get(),get()) }
+    viewModel { SharedViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
 }

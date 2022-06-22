@@ -5,6 +5,7 @@ import com.example.autoquest.domain.models.*
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
@@ -84,12 +85,17 @@ class QuestDataSourceImpl(
                 )
             )
         }
+
         val data = QuestsTasksList(questTaskList = questTaskList)
         emit(data)
 
     }.flowOn(Dispatchers.IO)
 
-    override fun addQuestToFavourites(userId: String, questId: Int, changeCallback: (result: Boolean) -> Unit) {
+    override fun addQuestToFavourites(
+        userId: String,
+        questId: Int,
+        changeCallback: (result: Boolean) -> Unit
+    ) {
 
         db.collection("favorite")
             .whereEqualTo("questId", questId)
@@ -101,7 +107,7 @@ class QuestDataSourceImpl(
                         db.collection("favorite").document(it.id).delete()
                         changeCallback.invoke(false)
                     }
-                } else{
+                } else {
                     changeCallback.invoke(true)
                     db.collection("favorite").document().set(Favourite(questId, userId))
                 }
@@ -133,5 +139,54 @@ class QuestDataSourceImpl(
 
         emit(questsId)
     }.flowOn(Dispatchers.IO)
+
+    override fun addPointsToUser(userId: String, userPoint: Float, questId: Int) {
+        db.collection("userPoint").document().set(UserPoint(userId, userPoint, questId))
+    }
+
+    /* override fun fetchUsersResult(questId: Int) = flow {
+
+        val usersById = Tasks.await(
+            db.collection("userPoint")
+                .whereEqualTo("questId", questId)
+                .get()
+        )
+
+        val users = Tasks.await(
+            db.collection("users").get()
+        )
+
+        var userResultList = mutableListOf<UserResultModel>()
+
+        usersById.documents.forEach { result ->
+            val userPoint = result.getLong("userPoint")!!.toFloat()
+
+            users.documents.forEach { user ->
+                if (user.getString("userId") == result.getString("userId")
+
+            }
+        }
+
+
+        emit(userResultList)
+    }.flowOn(Dispatchers.IO)
+
+     override fun fetchUsersByQuestId(questId: Int) = flow {
+         val users = Tasks.await(
+             db.collection("users").get()
+         )
+
+         val userList = mutableListOf<User>()
+
+         users.forEach {
+             val userId = it.getString("userId")
+             val userImg = it.getString("userImg")
+             val userName = it.getString("userName")
+
+             userList.add(User(userId!!, userImg!!, userName!!))
+         }
+
+         emit(userList)
+     }.flowOn(Dispatchers.IO)*/
 
 }
